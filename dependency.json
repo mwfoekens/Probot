@@ -1,0 +1,16 @@
+{
+  "dependencies": [
+    [
+      "Test Suite 1",
+      "Test Suite 3"
+    ],
+    [
+      "Test Suite 5",
+      "Test Suite 7"
+    ]
+  ],
+  "tags": [
+    "D",
+    "C"
+  ]
+}
