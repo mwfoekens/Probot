@@ -1,34 +1,33 @@
-import json
-from pprint import pprint
 from robot.api import TestSuite, ExecutionResult
 from random import choice
 
 from dependency import *
 
 
+# if we have a dependency file, we read the tags and dependencies and store that info
+# then we get the test suite info from a robot --dryrun
+# we go through the test suites and if the test is in dependencies/tags, we add to their clusters
+# else we check if it exists in the output XML
+# else we put it in a random cluster
+# send all clusters to the queue (rabbitMQ?)
+
+# docker does its thing and runs all clusters
+
+# all report snippets get assembled into one report
+# success
+
 def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_size=5):
-    # if we have a dependency file, we read the tags and dependencies and store that info
-    # then we get the test suite info from a robot --dryrun
-    # we go through the test suites and if the test is in dependencies/tags, we add to their clusters
-    # else we check if it exists in the output XML
-    # else we put it in a random cluster
-    # send all clusters to the queue (rabbitMQ?)
-
-    # docker does its thing and runs all clusters
-
-    # all report snippets get assembled into one report
-    # success
 
     clusters = []
     modulo_cluster = []
 
     if dependency_file is not None:
-        file = retrieve_json_data(dependency_file)
+        file = retrieve_dependencies(dependency_file)
         dependency_cluster, tags_cluster = generate_dependency_and_tags_clusters(file)
     else:
         print("No dependency.json found.")
 
-    result = retrieve_test_suite_results()
+    result = retrieve_dry_run_results()
 
     for test in result.suite.tests._items:
         modulo_cluster.append(test.name)
@@ -53,7 +52,8 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
     if output is not None:
         # Then we check whether we got an output.xml file, we read that too
         execution_times = dict()
-        timed_clusters = generate_dependency_and_tags_clusters(time_cluster_size)
+        timed_clusters = generate_clusters(time_cluster_size)
+        time_clusters_names = generate_clusters(time_cluster_size)
         data = ExecutionResult(output, merge=False)
         for test in data.suite.tests:
 
@@ -66,14 +66,15 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
         for test, time in sorted_execution_times.items():
             sum_per_cluster = [sum(timed_clusters) for timed_clusters in timed_clusters]
             index = sum_per_cluster.index(min(sum_per_cluster))
-            timed_clusters[index].append(test)
+            timed_clusters[index].append(time)
+            time_clusters_names[index].append(test)
 
-        add_cluster_group_to_all_clusters(clusters, timed_clusters)
+        add_cluster_group_to_all_clusters(clusters, time_clusters_names)
     else:
         print("No output.xml")
 
     # Then we assign randomly, because we just dont have that data.
-    random_clusters = generate_dependency_and_tags_clusters(random_cluster_size)
+    random_clusters = generate_clusters(random_cluster_size)
     for test in modulo_cluster:
         choice(random_clusters).append(test)
 
@@ -101,9 +102,9 @@ def add_cluster_group_to_all_clusters(clusters, cluster_group):
     clusters.extend(cluster_group)
 
 
-def retrieve_test_suite_results():
+def retrieve_dry_run_results():
     test_suite = TestSuite.from_file_system("test.robot")
     return test_suite.run(dryrun=True)
 
 
-main("dependency.json", "log\\output.xml")
+main("dependency.json", "log\\output.xml", time_cluster_size=1)

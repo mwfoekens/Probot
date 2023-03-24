@@ -7,6 +7,6 @@ def generate_dependency_and_tags_clusters(file):
     return dependency_cluster, tags_cluster
 
 
-def retrieve_json_data(dependency_file):
+def retrieve_dependencies(dependency_file):
     file = json.load(open(dependency_file))
     return file

@@ -39,6 +39,11 @@ Test Suite 8
     Sleep       5
     Log         Hey
 
+Test Suite 9
+    [Tags]      B
+    Sleep       10
+    Log         Hey
+
 Test Suite NIEUW!!!!
     [Tags]      F
     Sleep       5
