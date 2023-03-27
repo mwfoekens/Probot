@@ -1,3 +1,4 @@
+import robot.api
 from robot.api import TestSuite, ExecutionResult
 from random import choice
 
@@ -17,22 +18,23 @@ from dependency import *
 # success
 
 def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_size=5):
-    clusters = []
-    modulo_cluster = []
+    clusters: list = []
+    modulo_cluster: list = []
 
     if dependency_file is not None:
-        file = retrieve_dependencies(dependency_file)
+        file: json = retrieve_dependencies(dependency_file)
         dependency_cluster, tags_cluster = generate_dependency_and_tags_clusters(file)
     else:
         print("No dependency.json found.")
 
-    result = retrieve_dry_run_results()
+    result: robot.api.ExecutionResult = retrieve_dry_run_results()
 
-    for test in result.suite.tests._items:
-        modulo_cluster.append(test.name)
+    for suite in result.suite.suites:
+        for test in suite.tests:
+            modulo_cluster.append(test.name)
 
-        if dependency_file is not None:
-            dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
+            if dependency_file is not None:
+                dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
 
     if dependency_file is not None:
         add_cluster_group_to_all_clusters(clusters, dependency_cluster)
@@ -46,13 +48,13 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
     # Then we assign randomly, because we just dont have that data.
     add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
 
-    clusters = remove_empty_clusters(clusters)
+    clusters: list = remove_empty_clusters(clusters)
 
     return clusters
 
 
 def random_sort(modulo_cluster, random_cluster_size):
-    random_clusters = generate_clusters(random_cluster_size)
+    random_clusters: list = generate_clusters(random_cluster_size)
     for test in modulo_cluster:
         choice(random_clusters).append(test)
     return random_clusters
@@ -60,26 +62,32 @@ def random_sort(modulo_cluster, random_cluster_size):
 
 def outputxml_sort(clusters, modulo_cluster, output, time_cluster_size):
     # Then we check whether we got an output.xml file, we read that too
-    execution_times = dict()
-    timed_clusters = generate_clusters(time_cluster_size)
-    time_clusters_names = generate_clusters(time_cluster_size)
-    data = ExecutionResult(output, merge=False)
-    for test in data.suite.tests:
+    execution_times: dict = dict()
+    data: ExecutionResult = ExecutionResult(output, merge=False)
 
-        if test.name in modulo_cluster:
-            execution_times[test.name] = (test.elapsedtime / 1000)
-            modulo_cluster.remove(test.name)
-    sorted_execution_times = dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True))
+    for suite in data.suite.suites:
+        for test in suite.tests:
+
+            if test.name in modulo_cluster:
+                execution_times[test.name] = (test.elapsedtime / 1000)
+                modulo_cluster.remove(test.name)
+
+    sorted_execution_times: dict = dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True))
+    timed_clusters: list = generate_clusters(time_cluster_size)
+    time_clusters_names: list = generate_clusters(time_cluster_size)
+
     for test, time in sorted_execution_times.items():
-        sum_per_cluster = [sum(timed_clusters) for timed_clusters in timed_clusters]
-        index = sum_per_cluster.index(min(sum_per_cluster))
+
+        sum_per_cluster: list = [sum(timed_clusters) for timed_clusters in timed_clusters]
+        index: int = sum_per_cluster.index(min(sum_per_cluster))
         timed_clusters[index].append(time)
         time_clusters_names[index].append(test)
+
     add_cluster_group_to_all_clusters(clusters, time_clusters_names)
 
 
 def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test):
-    found_in_dependency = False
+    found_in_dependency: bool = False
 
     for i in range(len(file["dependencies"])):
         if test.name in file["dependencies"][i]:
@@ -108,10 +116,9 @@ def add_cluster_group_to_all_clusters(clusters, cluster_group):
     clusters.extend(cluster_group)
 
 
-def retrieve_dry_run_results():
-    test_suite = TestSuite.from_file_system("test.robot")
-    return test_suite.run(dryrun=True)
+def retrieve_dry_run_results() -> robot.api.ExecutionResult:
+    return TestSuite.from_file_system("").run(dryrun=True)
 
 
-res = main("dependency.json", "log\\output.xml", time_cluster_size=1)
+res = main("dependency.json", "log\\output.xml", time_cluster_size=2)
 print(f"clusters: {res}")

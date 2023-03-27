@@ -1,16 +1,16 @@
 {
   "dependencies": [
     [
-      "Test Suite 1",
-      "Test Suite 3"
+      "Test Case 1",
+      "Test Case 3"
     ],
     [
-      "Test Suite 5",
-      "Test Suite 7"
+      "Test Case 5",
+      "Test Case 7"
     ]
   ],
   "tags": [
-    "D",
-    "C"
+    "GroupingTagA",
+    "GroupingTagB"
   ]
 }
