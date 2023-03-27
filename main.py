@@ -69,8 +69,7 @@ def outputxml_sort(clusters, modulo_cluster, output, time_cluster_size):
         for test in suite.tests:
 
             if test.name in modulo_cluster:
-                execution_times[test.name] = (test.elapsedtime / 1000)
-                modulo_cluster.remove(test.name)
+                add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test)
 
     sorted_execution_times: dict = dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True))
     timed_clusters: list = generate_clusters(time_cluster_size)
@@ -100,7 +99,10 @@ def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test
 
 
 def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_cluster, test):
-    cluster_group[i].append(test.name)
+    if type(cluster_group) is dict:
+        cluster_group[test.name] = (test.elapsedtime / 1000)
+    else:
+        cluster_group[i].append(test.name)
     modulo_cluster.remove(test.name)
 
 

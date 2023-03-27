@@ -1,10 +1,15 @@
 *** Test Cases ***
-Test Case 1.2
+Test Case GroupTagA 2.1
     [Tags]      GroupingTagA
     Sleep       4
     Log         I am a message
 
-Test Case 2.2
+Test Case NoTag/D 2.1
+    [Tags]      A
+    Sleep       4
+    Log         I am a message
+
+Test Case D 2.2.3
     [Tags]      A
     Sleep       4
     Log         I am a message

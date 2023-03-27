@@ -1,12 +1,13 @@
 {
   "dependencies": [
     [
-      "Test Case 1",
-      "Test Case 3"
+      "Test Case D 1.1.1",
+      "Test Case D 1.1.2"
     ],
     [
-      "Test Case 5",
-      "Test Case 7"
+      "Test Case D 1.2.1",
+      "Test Case D 1.2.2",
+      "Test Case D 2.2.3"
     ]
   ],
   "tags": [
