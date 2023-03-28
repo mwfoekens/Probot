@@ -1,8 +1,8 @@
 import robot.api
 from robot.api import TestSuite, ExecutionResult
 from random import choice
-
-from dependency import *
+import json
+import pprint
 
 
 # if we have a dependency file, we read the tags and dependencies and store that info
@@ -17,13 +17,23 @@ from dependency import *
 # all report snippets get assembled into one report
 # success
 
-def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_size=5):
+def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_size=5) -> list:
+    """
+    Splits test suite into multiple clusters
+
+    :param dependency_file:     The file containing dependencies
+    :param output:              xml file containing runtimes of the previous run
+    :param time_cluster_size:   Amount of clusters for clusters split on time
+    :param random_cluster_size: Amount of clusters for clusters that are randomly assigned
+    :return:                    Clusters
+    """
     clusters: list = []
     modulo_cluster: list = []
 
     if dependency_file is not None:
-        file: json = retrieve_dependencies(dependency_file)
-        dependency_cluster, tags_cluster = generate_dependency_and_tags_clusters(file)
+        file: json = json.load(open(dependency_file))
+        dependency_cluster = generate_clusters(file["dependencies"])
+        tags_cluster = generate_clusters(file["tags"])
     else:
         print("No dependency.json found.")
 
@@ -41,7 +51,7 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
         add_cluster_group_to_all_clusters(clusters, tags_cluster)
 
     if output is not None:
-        outputxml_sort(clusters, modulo_cluster, output, time_cluster_size)
+        add_cluster_group_to_all_clusters(clusters, outputxml_sort(clusters, modulo_cluster, output, time_cluster_size))
     else:
         print("No output.xml")
 
@@ -53,14 +63,27 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
     return clusters
 
 
-def random_sort(modulo_cluster, random_cluster_size):
+def random_sort(modulo_cluster, random_cluster_size) -> list:
+    """
+    Function that randomly assigns test cases that are not in dependency, and do not exist in the output.xml
+    :param modulo_cluster:          Cluster where the leftover test cases are stored
+    :param random_cluster_size:     Amount of clusters for randomly assigned test cases.
+    :return:                        Clusters
+    """
     random_clusters: list = generate_clusters(random_cluster_size)
     for test in modulo_cluster:
         choice(random_clusters).append(test)
     return random_clusters
 
 
-def outputxml_sort(clusters, modulo_cluster, output, time_cluster_size):
+def outputxml_sort(modulo_cluster, output, time_cluster_size) -> list:
+    """
+    Sort based on execution times
+    :param modulo_cluster:      Cluster where the leftover test cases are stored
+    :param output:              Output.xml file
+    :param time_cluster_size:   Size for the timed clusters
+    :return:                    Clusters
+    """
     # Then we check whether we got an output.xml file, we read that too
     execution_times: dict = dict()
     data: ExecutionResult = ExecutionResult(output, merge=False)
@@ -76,16 +99,24 @@ def outputxml_sort(clusters, modulo_cluster, output, time_cluster_size):
     time_clusters_names: list = generate_clusters(time_cluster_size)
 
     for test, time in sorted_execution_times.items():
-
         sum_per_cluster: list = [sum(timed_clusters) for timed_clusters in timed_clusters]
         index: int = sum_per_cluster.index(min(sum_per_cluster))
         timed_clusters[index].append(time)
         time_clusters_names[index].append(test)
 
-    add_cluster_group_to_all_clusters(clusters, time_clusters_names)
+    return time_clusters_names
 
 
-def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test):
+def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test) -> None:
+    """
+    Sort into clusters based on dependencies
+    :param dependency_cluster:  Cluster containing test cases with direct dependencies
+    :param file:                File where dependencies are stored
+    :param modulo_cluster:      Cluster where leftover test cases are stored
+    :param tags_cluster:        Cluster where test cases with a tag mentioned in the dependency file are stored
+    :param test:                The individual test to be sorted
+    :return:                    None
+    """
     found_in_dependency: bool = False
 
     for i in range(len(file["dependencies"])):
@@ -98,7 +129,15 @@ def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test
             add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, i, modulo_cluster, test)
 
 
-def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_cluster, test):
+def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_cluster, test) -> None:
+    """
+    Add test to a new cluster group, and remove from the modulo cluster
+    :param cluster_group:   Cluster group to be added to
+    :param i:               Index of the cluster to be added to
+    :param modulo_cluster:  Leftover test case group.
+    :param test:            Test in question.
+    :return:                None
+    """
     if type(cluster_group) is dict:
         cluster_group[test.name] = (test.elapsedtime / 1000)
     else:
@@ -106,21 +145,46 @@ def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_clust
     modulo_cluster.remove(test.name)
 
 
-def remove_empty_clusters(clusters):
+def remove_empty_clusters(clusters) -> list:
+    """
+    Removes leftover clusters
+    :param clusters:    Cluster group containing all clusters
+    :return:            Clusters without empty clusters
+    """
     return [cluster for cluster in clusters if len(cluster) != 0]
 
 
-def generate_clusters(cluster_size):
-    return [[] for _ in range(cluster_size)]
+def generate_clusters(cluster_size) -> list:
+    """
+    Generate cluster groups within a cluster
+    :param cluster_size:    The size of the group
+    :return:                A cluster group with :var: cluster_size amount of clusters
+    """
+    if type(cluster_size) is int:
+        return [[] for _ in range(cluster_size)]
+    else:
+        return [[] for _ in cluster_size]
 
 
-def add_cluster_group_to_all_clusters(clusters, cluster_group):
+def add_cluster_group_to_all_clusters(clusters, cluster_group) -> list:
+    """
+    Add a cluster group to the overarching cluster group
+    :param clusters:        Overarching cluster group
+    :param cluster_group:   Group to be added to :var: clusters
+    :return:                :var: clusters
+    """
     clusters.extend(cluster_group)
 
 
 def retrieve_dry_run_results() -> robot.api.ExecutionResult:
+    """
+    Get the dry run results from Robot Test Suites
+    :return:    A Robot object containing the execution results
+    """
     return TestSuite.from_file_system("").run(dryrun=True)
 
 
-res = main("dependency.json", "log\\output.xml", time_cluster_size=2)
-print(f"clusters: {res}")
+res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)
+print("Clusters:")
+for i in range(len(res)):
+    print(f"Cluster {i + 1}: {res[i]}")
