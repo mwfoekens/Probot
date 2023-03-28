@@ -31,6 +31,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     clusters: list = []
     modulo_cluster: list = []
 
+    # If there is a dependency.json, read it and generate cluster groups for it
     if dependency_file is not None:
         file: dict = json.load(open(dependency_file))
         dependency_cluster: list = generate_clusters(file["dependencies"])
@@ -40,6 +41,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
 
     result: robot.api.ExecutionResult = retrieve_dry_run_results()
 
+    # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
         for test in suite.tests:
             modulo_cluster.append(test.name)
@@ -51,12 +53,13 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
         add_cluster_group_to_all_clusters(clusters, dependency_cluster)
         add_cluster_group_to_all_clusters(clusters, tags_cluster)
 
+    # if there is an output.xml, retrieve the times and sort based on execution time.
     if output is not None:
         add_cluster_group_to_all_clusters(clusters, outputxml_sort(modulo_cluster, output, time_cluster_size))
     else:
         print("No output.xml")
 
-    # Then we assign randomly, because we just dont have that data.
+    # Then assign randomly, because there's no data about the tests.
     add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
 
     clusters: list = remove_empty_clusters(clusters)
@@ -85,7 +88,6 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
     :param time_cluster_size:   Size for the timed clusters
     :return:                    Clusters
     """
-    # Then we check whether we got an output.xml file, we read that too
     execution_times: dict = dict()
     data: ExecutionResult = ExecutionResult(output, merge=False)
 
@@ -130,7 +132,8 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
             add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, ii, modulo_cluster, test)
 
 
-def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list, i: int or None, modulo_cluster: list, test) -> None:
+def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, i: int or None, modulo_cluster: list,
+                                                  test) -> None:
     """
     Add test to a new cluster group, and remove from the modulo cluster
     :param cluster_group:   Cluster group to be added to
@@ -167,7 +170,7 @@ def generate_clusters(cluster_size: int or list) -> list:
         return [[] for _ in cluster_size]
 
 
-def add_cluster_group_to_all_clusters(clusters: list, cluster_group:list) -> None:
+def add_cluster_group_to_all_clusters(clusters: list, cluster_group: list) -> None:
     """
     Add a cluster group to the overarching cluster group
     :param clusters:        Overarching cluster group
