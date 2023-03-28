@@ -17,7 +17,8 @@ import pprint
 # all report snippets get assembled into one report
 # success
 
-def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_size=5) -> list:
+def main(dependency_file: str or None = None, output: str or None = None, time_cluster_size: int = 5,
+         random_cluster_size: int = 5) -> list:
     """
     Splits test suite into multiple clusters
 
@@ -31,9 +32,9 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
     modulo_cluster: list = []
 
     if dependency_file is not None:
-        file: json = json.load(open(dependency_file))
-        dependency_cluster = generate_clusters(file["dependencies"])
-        tags_cluster = generate_clusters(file["tags"])
+        file: dict = json.load(open(dependency_file))
+        dependency_cluster: list = generate_clusters(file["dependencies"])
+        tags_cluster: list = generate_clusters(file["tags"])
     else:
         print("No dependency.json found.")
 
@@ -51,7 +52,7 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
         add_cluster_group_to_all_clusters(clusters, tags_cluster)
 
     if output is not None:
-        add_cluster_group_to_all_clusters(clusters, outputxml_sort(clusters, modulo_cluster, output, time_cluster_size))
+        add_cluster_group_to_all_clusters(clusters, outputxml_sort(modulo_cluster, output, time_cluster_size))
     else:
         print("No output.xml")
 
@@ -63,7 +64,7 @@ def main(dependency_file=None, output=None, time_cluster_size=5, random_cluster_
     return clusters
 
 
-def random_sort(modulo_cluster, random_cluster_size) -> list:
+def random_sort(modulo_cluster: list, random_cluster_size: int) -> list:
     """
     Function that randomly assigns test cases that are not in dependency, and do not exist in the output.xml
     :param modulo_cluster:          Cluster where the leftover test cases are stored
@@ -76,7 +77,7 @@ def random_sort(modulo_cluster, random_cluster_size) -> list:
     return random_clusters
 
 
-def outputxml_sort(modulo_cluster, output, time_cluster_size) -> list:
+def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) -> list:
     """
     Sort based on execution times
     :param modulo_cluster:      Cluster where the leftover test cases are stored
@@ -107,7 +108,7 @@ def outputxml_sort(modulo_cluster, output, time_cluster_size) -> list:
     return time_clusters_names
 
 
-def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test) -> None:
+def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, tags_cluster: list, test) -> None:
     """
     Sort into clusters based on dependencies
     :param dependency_cluster:  Cluster containing test cases with direct dependencies
@@ -124,12 +125,12 @@ def dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test
             add_to_cluster_and_remove_from_modulo_cluster(dependency_cluster, i, modulo_cluster, test)
             found_in_dependency = True
 
-    for i in range(len(file["tags"])):
-        if file["tags"][i] in test.tags and found_in_dependency is False:
-            add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, i, modulo_cluster, test)
+    for ii in range(len(file["tags"])):
+        if file["tags"][ii] in test.tags and found_in_dependency is False:
+            add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, ii, modulo_cluster, test)
 
 
-def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_cluster, test) -> None:
+def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list, i: int or None, modulo_cluster: list, test) -> None:
     """
     Add test to a new cluster group, and remove from the modulo cluster
     :param cluster_group:   Cluster group to be added to
@@ -145,7 +146,7 @@ def add_to_cluster_and_remove_from_modulo_cluster(cluster_group, i, modulo_clust
     modulo_cluster.remove(test.name)
 
 
-def remove_empty_clusters(clusters) -> list:
+def remove_empty_clusters(clusters: list) -> list:
     """
     Removes leftover clusters
     :param clusters:    Cluster group containing all clusters
@@ -154,7 +155,7 @@ def remove_empty_clusters(clusters) -> list:
     return [cluster for cluster in clusters if len(cluster) != 0]
 
 
-def generate_clusters(cluster_size) -> list:
+def generate_clusters(cluster_size: int or list) -> list:
     """
     Generate cluster groups within a cluster
     :param cluster_size:    The size of the group
@@ -166,7 +167,7 @@ def generate_clusters(cluster_size) -> list:
         return [[] for _ in cluster_size]
 
 
-def add_cluster_group_to_all_clusters(clusters, cluster_group) -> list:
+def add_cluster_group_to_all_clusters(clusters: list, cluster_group:list) -> None:
     """
     Add a cluster group to the overarching cluster group
     :param clusters:        Overarching cluster group
