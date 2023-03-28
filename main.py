@@ -59,8 +59,9 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     else:
         print("No output.xml")
 
-    # Then assign randomly, because there's no data about the tests.
-    add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
+    # If we have tests left, assign randomly, because there's no data about the tests.
+    if len(modulo_cluster) == 0:
+        add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
 
     clusters: list = remove_empty_clusters(clusters)
 
@@ -105,7 +106,7 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
         sum_per_cluster: list = [sum(timed_clusters) for timed_clusters in timed_clusters]
         index: int = sum_per_cluster.index(min(sum_per_cluster))
         timed_clusters[index].append(time)
-        time_clusters_names[index].append(test)
+        time_clusters_names[index].append((test, time))
 
     return time_clusters_names
 
@@ -185,7 +186,7 @@ def retrieve_dry_run_results() -> robot.api.ExecutionResult:
     Get the dry run results from Robot Test Suites
     :return:    A Robot object containing the execution results
     """
-    return TestSuite.from_file_system("").run(dryrun=True)
+    return TestSuite.from_file_system("").run(dryrun=True, outputdir="dryrunlog")
 
 
 res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)

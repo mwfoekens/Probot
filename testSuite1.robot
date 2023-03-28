@@ -20,12 +20,12 @@ Test Case D 1.2.2
     Log         Hey
 
 Test Case GroupTagA 1.1
-    [Tags]      GroupingTagA
+    [Tags]      GroupingTagA    Cool Tag      Cooler Tag
     Sleep       4
     Log         Hey
 
 Test Case GroupTagA 1.2
-    [Tags]      GroupingTagA
+    [Tags]      Another Tag     Cooler Other Tag        GroupingTagA
     Sleep       5
     Log         Hey
 
@@ -44,12 +44,12 @@ Test Case NoTag/D 1.2
     Sleep       10
     Log         Hey
 
-Test Case Not In XML 1
+Test Case Not In Output XML 1
     [Tags]      F
     Sleep       5
     Log         Hey
 
-Test Case Not In XML 2
+Test Case Not In Output XML 2
     [Tags]      F
     Sleep       5
     Log         Hey
