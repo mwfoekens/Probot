@@ -60,7 +60,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
         print("No output.xml")
 
     # If we have tests left, assign randomly, because there's no data about the tests.
-    if len(modulo_cluster) == 0:
+    if len(modulo_cluster) != 0:
         add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
 
     clusters: list = remove_empty_clusters(clusters)
