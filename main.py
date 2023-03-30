@@ -1,5 +1,7 @@
 import robot.api
 from robot.api import TestSuite, ExecutionResult
+from robot.result.model import TestCase
+from robot.result.visitor import ResultVisitor
 from random import choice
 import json
 
@@ -33,14 +35,14 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
         dependency_cluster: list = generate_clusters(file["dependencies"])
         tags_cluster: list = generate_clusters(file["tags"])
     else:
-        print("No dependency.json found.")
+        print("No dependency.json passed.")
 
     result: ExecutionResult = retrieve_dry_run_results()
 
     # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
         for test in suite.tests:
-            modulo_cluster.append(test.name)
+            modulo_cluster.append(test)
 
             if dependency_file is not None:
                 dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
@@ -54,15 +56,13 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     if output is not None:
         add_cluster_group_to_all_clusters(clusters, outputxml_sort(modulo_cluster, output, time_cluster_size))
     else:
-        print("No output.xml")
+        print("No output.xml passed")
 
     # If we have tests left, assign randomly, because there's no data about the tests.
     if len(modulo_cluster) != 0:
         add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
 
-    clusters: list = remove_empty_clusters(clusters)
-
-    return clusters
+    return remove_empty_clusters(clusters)
 
 
 def random_sort(modulo_cluster: list, random_cluster_size: int) -> list:
@@ -87,13 +87,12 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
     :return:                    Clusters
     """
     execution_times: dict = dict()
-    data: ExecutionResult = ExecutionResult(output, merge=False)
+    data: ExecutionResult = extract_xml(output)
 
     for suite in data.suite.suites:
-        for test in suite.tests:
-
-            if test.name in modulo_cluster:
-                add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test)
+        temp = [(a, b) for a in modulo_cluster for b in suite.tests if a.name == b.name]
+        for test in temp:
+            add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test[1], test[0])
 
     sorted_execution_times: dict = dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True))
     timed_clusters: list = generate_clusters(time_cluster_size)
@@ -132,20 +131,22 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
 
 def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,
                                                   modulo_cluster: list,
-                                                  test) -> None:
+                                                  test, test_case=None) -> None:
     """
     Add test to a new cluster group, and remove from the modulo cluster
     :param cluster_group:   Cluster group to be added to
     :param test_index:      Index of the cluster to be added to
     :param modulo_cluster:  Leftover test case group.
     :param test:            Test in question.
+    :param test_case:       Test case from the modulo cluster
     :return:                None
     """
     if type(cluster_group) is dict:
         cluster_group[test.name] = (test.elapsedtime / 1000)
+        modulo_cluster.remove(test_case)
     else:
-        cluster_group[test_index].append(test.name)
-    modulo_cluster.remove(test.name)
+        cluster_group[test_index].append(test)
+        modulo_cluster.remove(test)
 
 
 def remove_empty_clusters(clusters: list) -> list:
@@ -179,12 +180,16 @@ def add_cluster_group_to_all_clusters(clusters: list, cluster_group: list) -> No
     clusters.extend(cluster_group)
 
 
-def retrieve_dry_run_results() -> robot.api.ExecutionResult:
+def retrieve_dry_run_results() -> ExecutionResult:
     """
     Get the dry run results from Robot Test Suites
     :return:    A Robot object containing the execution results
     """
     return TestSuite.from_file_system("").run(dryrun=True, outputdir="dryrunlog")
+
+
+def extract_xml(output: str) -> ExecutionResult:
+    return ExecutionResult(output, merge=False)
 
 
 res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)

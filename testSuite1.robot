@@ -1,8 +1,13 @@
+*** Settings ***
+Library    Browser
+
 *** Test Cases ***
 Test Case D 1.1.1
     [Tags]      A
-    Sleep       2
-    Log         Hey
+    New Browser     browser=chromium    headless=False
+    New Page        https://todomvc.com/examples/react/#/
+    Sleep           2
+    Log             Hey
 
 Test Case D 1.1.2
     [Tags]      GroupingTagB
