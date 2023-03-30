@@ -2,20 +2,16 @@ import robot.api
 from robot.api import TestSuite, ExecutionResult
 from random import choice
 import json
-import pprint
 
 
-# if we have a dependency file, we read the tags and dependencies and store that info
-# then we get the test suite info from a robot --dryrun
-# we go through the test suites and if the test is in dependencies/tags, we add to their clusters
-# else we check if it exists in the output XML
-# else we put it in a random cluster
+# Currently it's test names in a cluster, but what how do we actually get functional test cases in a cluster?
+# What properties do the test clusters need to run. (essentially we're making small test suites?)
+
 # send all clusters to the queue (rabbitMQ?)
 
 # docker does its thing and runs all clusters
 
 # all report snippets get assembled into one report
-# success
 
 def main(dependency_file: str or None = None, output: str or None = None, time_cluster_size: int = 5,
          random_cluster_size: int = 5) -> list:
@@ -39,7 +35,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     else:
         print("No dependency.json found.")
 
-    result: robot.api.ExecutionResult = retrieve_dry_run_results()
+    result: ExecutionResult = retrieve_dry_run_results()
 
     # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
@@ -49,6 +45,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
             if dependency_file is not None:
                 dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
 
+    # Add the dependency cluster and tag cluster to all clusters
     if dependency_file is not None:
         add_cluster_group_to_all_clusters(clusters, dependency_cluster)
         add_cluster_group_to_all_clusters(clusters, tags_cluster)
@@ -133,12 +130,13 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
             add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, ii, modulo_cluster, test)
 
 
-def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, i: int or None, modulo_cluster: list,
+def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,
+                                                  modulo_cluster: list,
                                                   test) -> None:
     """
     Add test to a new cluster group, and remove from the modulo cluster
     :param cluster_group:   Cluster group to be added to
-    :param i:               Index of the cluster to be added to
+    :param test_index:      Index of the cluster to be added to
     :param modulo_cluster:  Leftover test case group.
     :param test:            Test in question.
     :return:                None
@@ -146,7 +144,7 @@ def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, i
     if type(cluster_group) is dict:
         cluster_group[test.name] = (test.elapsedtime / 1000)
     else:
-        cluster_group[i].append(test.name)
+        cluster_group[test_index].append(test.name)
     modulo_cluster.remove(test.name)
 
 
