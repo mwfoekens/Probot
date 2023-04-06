@@ -20,7 +20,8 @@ def send_message(message, channel, queue):
         routing_key=queue,
         body=message,
         properties=pika.BasicProperties(
-            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
+            content_type="application/json"
         ))
     print(" [x] Sent %r" % message)
 

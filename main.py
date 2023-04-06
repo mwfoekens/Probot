@@ -22,6 +22,13 @@ def main(dependency, output_xml, timed_cluster_size, random_cluster_size, queue,
     print(queue)
     print(host)
     clusters = splitter.main(dependency, output_xml, timed_cluster_size, random_cluster_size)
+    click.secho("Probot generated these clusters:", fg='cyan')
+    count = 0
+    for cluster in clusters:
+        click.echo(cluster)
+        count += 1
+    click.secho(f"{count} cluster(s)", fg='yellow')
+
     sender_connection = sender.open_sending_connection(host)
     sender_channel = sender.open_sending_channel(queue, host)
     for item in clusters:
@@ -35,5 +42,5 @@ if __name__ == '__main__':
         f"{click.style('ob', fg='magenta')}"
         f"{click.style('ot', fg='cyan')} "
         f"{click.style(f'VER. {VERSION}', fg='bright_green')}")
-    click.secho("for Robot Framework", fg='yellow')
+    click.secho("for Robot Framework (https://robotframework.org/)", fg='yellow')
     main()

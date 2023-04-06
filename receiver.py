@@ -1,5 +1,7 @@
 import pika
 import time
+import json
+import executor
 
 
 def open_receiving_connection(host):
@@ -17,6 +19,8 @@ def connect_to_receiving_channel(connection, queue):
 
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
+    data = json.loads(body.decode())
+    executor.generate_testsuite(data)
     time.sleep(body.count(b'.'))
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -28,6 +32,11 @@ def channel_consume(channel, queue):
 
     channel.start_consuming()
 
-# connection = open_receiving_connection()
-# channel = connect_to_receiving_channel(connection)
-# channel_consume(channel)
+
+def start(queue, host):
+    connection = open_receiving_connection(host)
+    channel = connect_to_receiving_channel(connection, queue)
+    channel_consume(channel, queue)
+
+
+start("probot_queue", "localhost")
