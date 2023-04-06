@@ -190,9 +190,3 @@ def retrieve_dry_run_results() -> ExecutionResult:
 
 def extract_xml(output: str) -> ExecutionResult:
     return ExecutionResult(output, merge=False)
-
-
-res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)
-print("Clusters:")
-for i in range(len(res)):
-    print(f"Cluster {i + 1}: {res[i]}")
