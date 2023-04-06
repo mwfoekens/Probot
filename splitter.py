@@ -1,9 +1,7 @@
-import robot.api
 from robot.api import TestSuite, ExecutionResult
-from robot.result.model import TestCase
-from robot.result.visitor import ResultVisitor
 from random import choice
 import json
+import click
 
 
 # Currently it's test names in a cluster, but what how do we actually get functional test cases in a cluster?
@@ -35,14 +33,14 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
         dependency_cluster: list = generate_clusters(file["dependencies"])
         tags_cluster: list = generate_clusters(file["tags"])
     else:
-        print("No dependency.json passed.")
+        click.secho("No dependency.json passed.", fg='bright_red', bg='white')
 
     result: ExecutionResult = retrieve_dry_run_results()
 
     # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
         for test in suite.tests:
-            modulo_cluster.append(test)
+            modulo_cluster.append(test.name)
 
             if dependency_file is not None:
                 dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
@@ -56,7 +54,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     if output is not None:
         add_cluster_group_to_all_clusters(clusters, outputxml_sort(modulo_cluster, output, time_cluster_size))
     else:
-        print("No output.xml passed")
+        click.secho("No output.xml passed", fg='bright_red', bg='white')
 
     # If we have tests left, assign randomly, because there's no data about the tests.
     if len(modulo_cluster) != 0:
@@ -90,9 +88,10 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
     data: ExecutionResult = extract_xml(output)
 
     for suite in data.suite.suites:
-        temp = [(a, b) for a in modulo_cluster for b in suite.tests if a.name == b.name]
-        for test in temp:
-            add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test[1], test[0])
+        for test in suite.tests:
+
+            if test.name in modulo_cluster:
+                add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test)
 
     sorted_execution_times: dict = dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True))
     timed_clusters: list = generate_clusters(time_cluster_size)
@@ -102,7 +101,7 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
         sum_per_cluster: list = [sum(timed_clusters) for timed_clusters in timed_clusters]
         index: int = sum_per_cluster.index(min(sum_per_cluster))
         timed_clusters[index].append(time)
-        time_clusters_names[index].append((test, time))
+        time_clusters_names[index].append(test)
 
     return time_clusters_names
 
@@ -131,22 +130,20 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
 
 def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,
                                                   modulo_cluster: list,
-                                                  test, test_case=None) -> None:
+                                                  test) -> None:
     """
     Add test to a new cluster group, and remove from the modulo cluster
     :param cluster_group:   Cluster group to be added to
     :param test_index:      Index of the cluster to be added to
     :param modulo_cluster:  Leftover test case group.
     :param test:            Test in question.
-    :param test_case:       Test case from the modulo cluster
     :return:                None
     """
     if type(cluster_group) is dict:
         cluster_group[test.name] = (test.elapsedtime / 1000)
-        modulo_cluster.remove(test_case)
     else:
-        cluster_group[test_index].append(test)
-        modulo_cluster.remove(test)
+        cluster_group[test_index].append(test.name)
+    modulo_cluster.remove(test.name)
 
 
 def remove_empty_clusters(clusters: list) -> list:
@@ -190,3 +187,8 @@ def retrieve_dry_run_results() -> ExecutionResult:
 
 def extract_xml(output: str) -> ExecutionResult:
     return ExecutionResult(output, merge=False)
+
+# res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)
+# print("Clusters:")
+# for i in range(len(res)):
+#     print(f"Cluster {i + 1}: {res[i]}")
