@@ -1,7 +1,7 @@
 import pika
 import time
 import json
-import executor
+import data_preparer
 
 
 def open_receiving_connection(host):
