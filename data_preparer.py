@@ -10,8 +10,8 @@ def prepare(data):
     test_cases, imports = get_testcase_objects(data)
     suite = generate_testsuite_from_data(test_cases, imports)
     print(suite.tests)
-    suite.run(output="./outputlog/output.xml", outputdir="outputlog")
-    ResultWriter("./outputlog/output.xml").write_results()
+    suite.run(outputdir="outputlog")
+    ResultWriter("output.xml").write_results(outputdir="outputlog")
 
 
 def get_testcase_objects(received_data):
@@ -61,7 +61,7 @@ def maintain_test_case_order(received_data, test_case_objects):
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases, imports, test_suite_name="Temporary TestSuite"):
+def generate_testsuite_from_data(test_cases, imports, test_suite_name="None"):
     """
     Generate a test suite with all the test cases, and import all necessary imports
     :param test_cases: the test cases
@@ -69,7 +69,7 @@ def generate_testsuite_from_data(test_cases, imports, test_suite_name="Temporary
     :param test_suite_name: Name of the testsuite
     :return: the test suite
     """
-    suite = TestSuite(test_suite_name)
+    suite = TestSuite("TestSuite: " + str(test_suite_name))
     for import_item in imports:
         suite.resource.imports.library(import_item.name)
 
