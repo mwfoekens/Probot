@@ -4,11 +4,6 @@ import json
 import click
 
 
-# Currently it's test names in a cluster, but what how do we actually get functional test cases in a cluster?
-# What properties do the test clusters need to run. (essentially we're making small test suites?)
-
-# send all clusters to the queue (rabbitMQ?)
-
 # docker does its thing and runs all clusters
 
 # all report snippets get assembled into one report
@@ -118,14 +113,16 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
     """
     found_in_dependency: bool = False
 
-    for i in range(len(file["dependencies"])):
-        if test.name in file["dependencies"][i]:
-            add_to_cluster_and_remove_from_modulo_cluster(dependency_cluster, i, modulo_cluster, test)
+    for dependency_index in range(len(file["dependencies"])):
+
+        if test.name in file["dependencies"][dependency_index]:
+            add_to_cluster_and_remove_from_modulo_cluster(dependency_cluster, dependency_index, modulo_cluster, test)
             found_in_dependency = True
 
-    for ii in range(len(file["tags"])):
-        if file["tags"][ii] in test.tags and found_in_dependency is False:
-            add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, ii, modulo_cluster, test)
+    for tags_index in range(len(file["tags"])):
+
+        if file["tags"][tags_index] in test.tags and found_in_dependency is False:
+            add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, tags_index, modulo_cluster, test)
 
 
 def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,

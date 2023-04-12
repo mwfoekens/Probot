@@ -1,17 +1,30 @@
 from robot.api import TestSuite, ResultWriter
 
 
-def prepare(data):
+def prepare(data, output_path_location=None):
     """
     Method that prepares the data and generates test suites
     :param data: data that was received by receiver
+    :param output_path_location:
     :return:
     """
     test_cases, imports = get_testcase_objects(data)
     suite = generate_testsuite_from_data(test_cases, imports)
     print(suite.tests)
-    suite.run(outputdir="outputlog")
-    ResultWriter("output.xml").write_results(outputdir="outputlog")
+    if output_path_location is None:
+        output_path_location = "outputlog"
+    execute(suite, output_path_location)
+
+
+def execute(suite, output_path_location):
+    """
+    Execute the test suite and store information at a custom location
+    :param suite: the test suite
+    :param output_path_location: the output location
+    :return:
+    """
+    suite.run(outputdir=output_path_location)
+    ResultWriter("output.xml").write_results(outputdir=output_path_location)
 
 
 def get_testcase_objects(received_data):
@@ -23,9 +36,11 @@ def get_testcase_objects(received_data):
     data = TestSuite.from_file_system("")
     test_case_objects = []
     imports = set()
+
     for suite in data.suites:
         imports.update(get_imports(suite))
-        test_case_objects.extend([a for a in suite.tests for b in received_data if a.name == b])
+        test_case_objects.extend([test_case_object for test_case_object in suite.tests for test_name in received_data if
+                                  test_case_object.name == test_name])
 
     if len(received_data) != len(test_case_objects):
         raise IndexError("Not all test cases were found")
@@ -53,10 +68,12 @@ def maintain_test_case_order(received_data, test_case_objects):
     :return: :var test_case_objects, but the same order as :var received_data
     """
     sorted_list = []
-    for i in range(len(received_data)):
-        for y in range(len(test_case_objects)):
-            if received_data[i] == test_case_objects[y].name:
-                sorted_list.insert(i, test_case_objects[y])
+    for index_received_data in range(len(received_data)):
+        for index_test_case_objects in range(len(test_case_objects)):
+
+            if received_data[index_received_data] == test_case_objects[index_test_case_objects].name:
+                sorted_list.insert(index_received_data, test_case_objects[index_test_case_objects])
+                break
 
     return sorted_list
 
@@ -74,13 +91,12 @@ def generate_testsuite_from_data(test_cases, imports, test_suite_name="None"):
         suite.resource.imports.library(import_item.name)
 
     for test in test_cases:
-        t = suite.tests.create(name=test.name)
+        test_case = suite.tests.create(name=test.name)
 
         for keyword in test.body:
-            t.body.create_keyword(keyword.name, args=keyword.args)
+            test_case.body.create_keyword(keyword.name, args=keyword.args)
 
     return suite
 
-
-a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1"]
-prepare(a)
+# a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1"]
+# prepare(a)
