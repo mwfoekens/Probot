@@ -1,12 +1,8 @@
 import pika
 import time
 import json
+import os
 import data_preparer
-
-
-def open_receiving_connection(host):
-    return pika.BlockingConnection(
-        pika.ConnectionParameters(host=host))
 
 
 def connect_to_receiving_channel(connection, queue):
@@ -33,10 +29,17 @@ def channel_consume(channel, queue):
     channel.start_consuming()
 
 
-def start(queue, host):
-    connection = open_receiving_connection(host)
+def start():
+    try:
+        amqp_url = os.environ['AMQP_URL']
+        queue = os.environ['QUEUE_NAME']
+    except KeyError:
+        amqp_url = 'localhost'
+        queue = 'probot_queue'
+
+    connection = pika.BlockingConnection(pika.ConnectionParameters(amqp_url))
     channel = connect_to_receiving_channel(connection, queue)
     channel_consume(channel, queue)
 
 
-start("probot_queue", "localhost")
+start()

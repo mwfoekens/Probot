@@ -1,0 +1,16 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - network
+  consumer:
+    build: Dockerfile
+    environment:
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+      QUEUE_NAME: 'probot_queue'
+    networks:
+      - network
