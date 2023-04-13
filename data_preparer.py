@@ -1,4 +1,6 @@
+import robot.errors
 from robot.api import TestSuite, ResultWriter
+from pathlib import Path
 
 
 def prepare(data, output_path_location=None):
@@ -23,8 +25,9 @@ def execute(suite, output_path_location):
     :param output_path_location: the output location
     :return:
     """
-    suite.run(outputdir=output_path_location)
-    ResultWriter("output.xml").write_results(outputdir=output_path_location)
+    path = Path("/" + output_path_location)
+    suite.run(outputdir=path)
+    ResultWriter(Path("/" + output_path_location + "/output.xml")).write_results(outputdir=path)
 
 
 def get_testcase_objects(received_data):
@@ -33,7 +36,11 @@ def get_testcase_objects(received_data):
     :param received_data: test case names
     :return: the test case order and the imports
     """
-    data = TestSuite.from_file_system("")
+    try:
+        data = TestSuite.from_file_system(Path("/suites"))
+    except robot.errors.DataError:
+        data = TestSuite.from_file_system(Path("suites"))
+
     test_case_objects = []
     imports = set()
 

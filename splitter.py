@@ -179,7 +179,7 @@ def retrieve_dry_run_results() -> ExecutionResult:
     Get the dry run results from Robot Test Suites
     :return:    A Robot object containing the execution results
     """
-    return TestSuite.from_file_system("").run(dryrun=True, outputdir="dryrunlog")
+    return TestSuite.from_file_system("suites").run(dryrun=True, outputdir="dryrunlog")
 
 
 def extract_xml(output: str) -> ExecutionResult:

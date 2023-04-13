@@ -17,7 +17,7 @@ def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     data = json.loads(body.decode())
     data_preparer.prepare(data)
-    time.sleep(body.count(b'.'))
+    # time.sleep(body.count(b'.'))
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
