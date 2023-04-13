@@ -31,13 +31,17 @@ def channel_consume(channel, queue):
 
 def start():
     try:
+        # docker
         amqp_url = os.environ['AMQP_URL']
         queue = os.environ['QUEUE_NAME']
+        url = pika.URLParameters(amqp_url)
     except KeyError:
+        # local testing
         amqp_url = 'localhost'
         queue = 'probot_queue'
+        url = pika.ConnectionParameters(amqp_url)
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(amqp_url))
+    connection = pika.BlockingConnection(url)
     channel = connect_to_receiving_channel(connection, queue)
     channel_consume(channel, queue)
 
