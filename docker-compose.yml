@@ -26,5 +26,17 @@ services:
     networks:
       - rabbit-network
 
+  probot-consumer2:
+    container_name: consumer-2
+    image: consumer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672'
+      QUEUE_NAME: 'probot_queue'
+    networks:
+      - rabbit-network
+
 networks:
   rabbit-network: { }
