@@ -23,10 +23,13 @@ services:
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
+      EXECUTOR: 'Docker Executor 1'
     depends_on:
       - rabbitmq
     networks:
       - rabbit-network
+    volumes:
+      - test-suite-output:/test-output
 
   probot-consumer2:
     container_name: consumer-2
@@ -39,8 +42,21 @@ services:
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
+      EXECUTOR: 'Docker Executor 2'
     networks:
       - rabbit-network
+    volumes:
+      - test-suite-output:/test-output
+
+  log-combiner:
+    container_name: log-combiner
+    build: log-combiner
+    restart: no
+    volumes:
+      - test-suite-output:/test-output
 
 networks:
   rabbit-network: { }
+
+volumes:
+  test-suite-output:

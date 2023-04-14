@@ -1,5 +1,8 @@
 from robot.api import TestSuite, ResultWriter
 from pathlib import PurePath
+import os
+
+COUNT = 0
 
 
 def prepare(data, output_path_location=None, test_suite_name=None):
@@ -16,18 +19,20 @@ def prepare(data, output_path_location=None, test_suite_name=None):
         output_path_location = PurePath("outputlog")
     else:
         output_path_location = PurePath(output_path_location)
-    execute(suite, output_path_location)
+    execute(suite, output_path_location, test_suite_name)
 
 
-def execute(suite, output_path_location):
+def execute(suite, output_path_location, test_suite_name):
     """
     Execute the test suite and store information at a custom location
     :param suite: the test suite
     :param output_path_location: the output location
+    :param test_suite_name:
     :return:
     """
-    suite.run(outputdir=output_path_location)
-    ResultWriter(PurePath(output_path_location / "output.xml")).write_results(outputdir=output_path_location)
+    suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
+    # ResultWriter(PurePath(f"/{test_suite_name}-{str(COUNT)}-output.xml")).write_results(
+    #     outputdir=PurePath(output_path_location))
 
 
 def get_testcase_objects(received_data):
