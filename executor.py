@@ -1,20 +1,21 @@
-import robot.errors
 from robot.api import TestSuite, ResultWriter
-from pathlib import Path
+from pathlib import PurePath
 
 
-def prepare(data, output_path_location=None):
+def prepare(data, output_path_location=None, test_suite_name=None):
     """
     Method that prepares the data and generates test suites
     :param data: data that was received by receiver
     :param output_path_location:
+    :param test_suite_name:
     :return:
     """
     test_cases, imports = get_testcase_objects(data)
-    suite = generate_testsuite_from_data(test_cases, imports)
-    print(suite.tests)
+    suite = generate_testsuite_from_data(test_cases, imports, test_suite_name)
     if output_path_location is None:
-        output_path_location = "outputlog"
+        output_path_location = PurePath("outputlog")
+    else:
+        output_path_location = PurePath(output_path_location)
     execute(suite, output_path_location)
 
 
@@ -25,9 +26,8 @@ def execute(suite, output_path_location):
     :param output_path_location: the output location
     :return:
     """
-    path = Path("/" + output_path_location)
-    suite.run(outputdir=path)
-    ResultWriter(Path("/" + output_path_location + "/output.xml")).write_results(outputdir=path)
+    suite.run(outputdir=output_path_location)
+    ResultWriter(PurePath(output_path_location / "output.xml")).write_results(outputdir=output_path_location)
 
 
 def get_testcase_objects(received_data):
@@ -36,10 +36,7 @@ def get_testcase_objects(received_data):
     :param received_data: test case names
     :return: the test case order and the imports
     """
-    try:
-        data = TestSuite.from_file_system(Path("/suites"))
-    except robot.errors.DataError:
-        data = TestSuite.from_file_system(Path("suites"))
+    data = TestSuite.from_file_system(PurePath("suites"))
 
     test_case_objects = []
     imports = set()

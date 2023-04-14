@@ -21,8 +21,10 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672'
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
+    depends_on:
+      - rabbitmq
     networks:
       - rabbit-network
 
@@ -32,8 +34,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
     environment:
-      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672'
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
     networks:
       - rabbit-network

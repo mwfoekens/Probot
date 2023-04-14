@@ -2,7 +2,7 @@ import pika
 import time
 import json
 import os
-import data_preparer
+import executor
 
 
 def connect_to_receiving_channel(connection, queue):
@@ -16,8 +16,8 @@ def connect_to_receiving_channel(connection, queue):
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     data = json.loads(body.decode())
-    data_preparer.prepare(data)
-    # time.sleep(body.count(b'.'))
+    executor.prepare(data)
+    time.sleep(body.count(b'.'))
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -35,11 +35,13 @@ def start():
         amqp_url = os.environ['AMQP_URL']
         queue = os.environ['QUEUE_NAME']
         url = pika.URLParameters(amqp_url)
+        print("Running on Docker \nURL: " + amqp_url + "\nqueue: " + queue)
     except KeyError:
         # local testing
         amqp_url = 'localhost'
         queue = 'probot_queue'
         url = pika.ConnectionParameters(amqp_url)
+        print("Running locally \nURL:" + amqp_url + "\nqueue: " + queue)
 
     connection = pika.BlockingConnection(url)
     channel = connect_to_receiving_channel(connection, queue)

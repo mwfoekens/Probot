@@ -1,4 +1,5 @@
 from robot.api import TestSuite, ExecutionResult
+from pathlib import PurePath
 from random import choice
 import json
 import click
@@ -179,11 +180,11 @@ def retrieve_dry_run_results() -> ExecutionResult:
     Get the dry run results from Robot Test Suites
     :return:    A Robot object containing the execution results
     """
-    return TestSuite.from_file_system("suites").run(dryrun=True, outputdir="dryrunlog")
+    return TestSuite.from_file_system(PurePath("suites")).run(dryrun=True, outputdir=PurePath("dryrunlog"))
 
 
 def extract_xml(output: str) -> ExecutionResult:
-    return ExecutionResult(output, merge=False)
+    return ExecutionResult(PurePath(output), merge=False)
 
 # res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)
 # print("Clusters:")
