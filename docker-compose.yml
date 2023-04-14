@@ -4,8 +4,6 @@ services:
     container_name: rabbitmq
     hostname: rabbitmq
     image: rabbitmq:3.8-management
-    expose:
-      - '5672'
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -14,12 +12,11 @@ services:
 
   probot-consumer:
     container_name: consumer
-    image: consumer
+    image: consumer:latest
     #    tty: true
     #    command: tail -F anything
     build:
-      context: .
-      dockerfile: Dockerfile
+      dockerfile: src/Dockerfile
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
@@ -33,10 +30,9 @@ services:
 
   probot-consumer2:
     container_name: consumer-2
-    image: consumer
+    image: consumer:latest
     build:
-      context: .
-      dockerfile: Dockerfile
+      dockerfile: src/Dockerfile
     depends_on:
       - rabbitmq
     environment:
@@ -50,7 +46,8 @@ services:
 
   log-combiner:
     container_name: log-combiner
-    build: log-combiner
+    image: probot-log-combiner:latest
+    build: src/log-combiner
     restart: no
     volumes:
       - test-suite-output:/test-output

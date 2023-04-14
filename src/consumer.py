@@ -24,7 +24,7 @@ def callback(ch, method, properties, body):
         # local test
         test_suite = "LOCAL TEST"
 
-    executor.prepare(data, "test-output", test_suite)
+    executor.prepare(data, "log-combiner/test-output", test_suite)
     executor.COUNT += 1
     time.sleep(body.count(b'.'))
     print(" [x] Done")

@@ -1,3 +1,5 @@
+import os
+
 from robot.api import TestSuite, ExecutionResult
 from pathlib import PurePath
 from random import choice
@@ -180,7 +182,7 @@ def retrieve_dry_run_results() -> ExecutionResult:
     Get the dry run results from Robot Test Suites
     :return:    A Robot object containing the execution results
     """
-    return TestSuite.from_file_system(PurePath("suites")).run(dryrun=True, outputdir=PurePath("dryrunlog"))
+    return TestSuite.from_file_system(PurePath("suites")).run(dryrun=True, outputdir=PurePath("../dryrunlog"))
 
 
 def extract_xml(output: str) -> ExecutionResult:

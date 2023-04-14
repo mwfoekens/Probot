@@ -4,10 +4,10 @@ ENV PYTHONUNBUFFERED=1
 #RUN git clone https://github.com/mwfoekens/Probot data/app
 #WORKDIR /data/app
 RUN mkdir "/suites"
-COPY requirements.txt /tmp/requirements.txt
+COPY ../requirements.txt /tmp/requirements.txt
 RUN python3 -m pip install --upgrade pip && python3 -m pip install -r /tmp/requirements.txt
 COPY consumer.py .
 COPY executor.py .
-COPY suites/testSuite1.robot suites
-COPY suites/testSuite2.robot suites
+COPY ../suites/testSuite1.robot suites
+COPY ../suites/testSuite2.robot suites
 CMD ["python3", "consumer.py"]

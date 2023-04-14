@@ -1,6 +1,5 @@
-from robot.api import TestSuite, ResultWriter
+from robot.api import TestSuite
 from pathlib import PurePath
-import os
 
 COUNT = 0
 
@@ -16,7 +15,7 @@ def prepare(data, output_path_location=None, test_suite_name=None):
     test_cases, imports = get_testcase_objects(data)
     suite = generate_testsuite_from_data(test_cases, imports, test_suite_name)
     if output_path_location is None:
-        output_path_location = PurePath("outputlog")
+        output_path_location = PurePath("../outputlog")
     else:
         output_path_location = PurePath(output_path_location)
     execute(suite, output_path_location, test_suite_name)
@@ -41,7 +40,7 @@ def get_testcase_objects(received_data):
     :param received_data: test case names
     :return: the test case order and the imports
     """
-    data = TestSuite.from_file_system(PurePath("suites"))
+    data = TestSuite.from_file_system(PurePath("../suites"))
 
     test_case_objects = []
     imports = set()
