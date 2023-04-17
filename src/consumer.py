@@ -20,11 +20,13 @@ def callback(ch, method, properties, body):
     try:
         # docker
         test_suite = os.environ["EXECUTOR"]
+        output_location = "test-output"
     except KeyError:
         # local test
         test_suite = "LOCAL TEST"
+        output_location = "log-combiner/test-output"
 
-    executor.prepare(data, "log-combiner/test-output", test_suite)
+    executor.prepare(data, output_location, test_suite)
     executor.COUNT += 1
     time.sleep(body.count(b'.'))
     print(" [x] Done")

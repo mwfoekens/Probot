@@ -30,8 +30,6 @@ def execute(suite, output_path_location, test_suite_name):
     :return:
     """
     suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
-    # ResultWriter(PurePath(f"/{test_suite_name}-{str(COUNT)}-output.xml")).write_results(
-    #     outputdir=PurePath(output_path_location))
 
 
 def get_testcase_objects(received_data):
@@ -86,7 +84,7 @@ def maintain_test_case_order(received_data, test_case_objects):
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases, imports, test_suite_name="None"):
+def generate_testsuite_from_data(test_cases, imports, test_suite_name):
     """
     Generate a test suite with all the test cases, and import all necessary imports
     :param test_cases: the test cases
@@ -94,7 +92,7 @@ def generate_testsuite_from_data(test_cases, imports, test_suite_name="None"):
     :param test_suite_name: Name of the testsuite
     :return: the test suite
     """
-    suite = TestSuite("TestSuite: " + str(test_suite_name))
+    suite = TestSuite(str(test_suite_name) + " Suite: " + str(COUNT))
     for import_item in imports:
         suite.resource.imports.library(import_item.name)
 
