@@ -98,6 +98,7 @@ def generate_testsuite_from_data(test_cases, imports, test_suite_name):
 
     for test in test_cases:
         test_case = suite.tests.create(name=test.name)
+        test_case.tags = test.tags
 
         for keyword in test.body:
             test_case.body.create_keyword(keyword.name, args=keyword.args)

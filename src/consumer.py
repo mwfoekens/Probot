@@ -28,7 +28,7 @@ def callback(ch, method, properties, body):
 
     executor.prepare(data, output_location, test_suite)
     executor.COUNT += 1
-    time.sleep(body.count(b'.'))
+    # time.sleep(body.count(b'.'))
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -52,7 +52,7 @@ def start():
         amqp_url = 'localhost'
         queue = 'probot_queue'
         url = pika.ConnectionParameters(amqp_url)
-        print("Running locally \nURL:" + amqp_url + "\nqueue: " + queue)
+        print("Running locally \nURL: " + amqp_url + "\nqueue: " + queue)
 
     connection = pika.BlockingConnection(url)
     channel = connect_to_receiving_channel(connection, queue)
