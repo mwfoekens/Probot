@@ -23,26 +23,32 @@ services:
       EXECUTOR: 'Docker Executor 1'
     depends_on:
       - rabbitmq
+    ports:
+      - "52325:52325"
     networks:
       - rabbit-network
     volumes:
-      - test-suite-output:/test-output
+      - test-outputs:/test-output
+      - ./suites/:/test-suites/
 
   probot-consumer2:
     container_name: consumer-2
     image: consumer:latest
     build:
       dockerfile: src/Dockerfile
-    depends_on:
-      - rabbitmq
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
       EXECUTOR: 'Docker Executor 2'
+    depends_on:
+      - rabbitmq
+    ports:
+      - "52326:52326"
     networks:
       - rabbit-network
     volumes:
-      - test-suite-output:/test-output
+      - test-outputs:/test-output
+      - ./suites/:/test-suites/
 
   log-combiner:
     container_name: log-combiner
@@ -50,10 +56,11 @@ services:
     build: src/log-combiner
     restart: no
     volumes:
-      - test-suite-output:/test-output
+      - test-outputs:/test-output
+      - ./docker-output/:/output/
 
 networks:
   rabbit-network: { }
 
 volumes:
-  test-suite-output:
+  test-outputs: { }

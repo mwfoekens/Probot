@@ -4,7 +4,7 @@ from pathlib import PurePath
 COUNT = 0
 
 
-def prepare(data, output_path_location=None, test_suite_name=None):
+def prepare(data: list, output_path_location: str, test_suite_name: str):
     """
     Method that prepares the data and generates test suites
     :param data: data that was received by receiver
@@ -14,14 +14,10 @@ def prepare(data, output_path_location=None, test_suite_name=None):
     """
     test_cases, imports = get_testcase_objects(data)
     suite = generate_testsuite_from_data(test_cases, imports, test_suite_name)
-    if output_path_location is None:
-        output_path_location = PurePath("../outputlog")
-    else:
-        output_path_location = PurePath(output_path_location)
-    execute(suite, output_path_location, test_suite_name)
+    execute(suite, PurePath(output_path_location), test_suite_name)
 
 
-def execute(suite, output_path_location, test_suite_name):
+def execute(suite: TestSuite, output_path_location: PurePath, test_suite_name: str):
     """
     Execute the test suite and store information at a custom location
     :param suite: the test suite
@@ -32,13 +28,18 @@ def execute(suite, output_path_location, test_suite_name):
     suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
 
 
-def get_testcase_objects(received_data):
+def get_testcase_objects(received_data: list):
     """
     Get the test case objects that correspond to the test suite names
     :param received_data: test case names
     :return: the test case order and the imports
     """
-    data = TestSuite.from_file_system(PurePath("../suites"))
+    try:
+        # docker
+        data = TestSuite.from_file_system(PurePath("test-suites"))
+    except KeyError:
+        # local test
+        data = TestSuite.from_file_system(PurePath("../suites"))
 
     test_case_objects = []
     imports = set()
@@ -54,7 +55,7 @@ def get_testcase_objects(received_data):
     return maintain_test_case_order(received_data, test_case_objects), imports
 
 
-def get_imports(suite):
+def get_imports(suite: TestSuite):
     """
     get imports from a test suite
     :param suite: a test suite
@@ -66,7 +67,7 @@ def get_imports(suite):
     return imports
 
 
-def maintain_test_case_order(received_data, test_case_objects):
+def maintain_test_case_order(received_data: list, test_case_objects: list):
     """
     Sort the test case objects so that the order of the :var received_data and the :var test_case_objects are the same
     :param received_data: the cluster
@@ -84,10 +85,10 @@ def maintain_test_case_order(received_data, test_case_objects):
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases, imports, test_suite_name):
+def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name: str):
     """
     Generate a test suite with all the test cases, and import all necessary imports
-    :param test_cases: the test cases
+    :param test_cases: a list of test cases
     :param imports: the imports this suite will require
     :param test_suite_name: Name of the testsuite
     :return: the test suite

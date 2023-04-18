@@ -1,11 +1,16 @@
 import pika
-import time
 import json
 import os
 import executor
 
 
 def connect_to_receiving_channel(connection, queue):
+    """
+    Connecting to a channel
+    :param connection:
+    :param queue:
+    :return: channel
+    """
     channel = connection.channel()
 
     channel.queue_declare(queue=queue, durable=True)
@@ -14,6 +19,14 @@ def connect_to_receiving_channel(connection, queue):
 
 
 def callback(ch, method, properties, body):
+    """
+    This method is called every time a message is received. This method deals with test cases and then acknowledges
+    :param ch:
+    :param method:
+    :param properties:
+    :param body:
+    :return:
+    """
     print(" [x] Received %r" % body.decode())
     data = json.loads(body.decode())
 
@@ -34,6 +47,12 @@ def callback(ch, method, properties, body):
 
 
 def channel_consume(channel, queue):
+    """
+    Start consuming from the channel
+    :param channel:
+    :param queue:
+    :return: None
+    """
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue=queue, on_message_callback=callback)
 
@@ -41,6 +60,10 @@ def channel_consume(channel, queue):
 
 
 def start():
+    """
+    Start the connection
+    :return: None
+    """
     try:
         # docker
         amqp_url = os.environ['AMQP_URL']
@@ -55,8 +78,11 @@ def start():
         print("Running locally \nURL: " + amqp_url + "\nqueue: " + queue)
 
     connection = pika.BlockingConnection(url)
-    channel = connect_to_receiving_channel(connection, queue)
-    channel_consume(channel, queue)
+    try:
+        channel = connect_to_receiving_channel(connection, queue)
+        channel_consume(channel, queue)
+    except KeyboardInterrupt:
+        connection.close(reply_text="Process stopped")
 
 
 start()

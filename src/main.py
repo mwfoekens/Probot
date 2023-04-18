@@ -15,12 +15,22 @@ VERSION = "0.1"
 @click.option('-q', '--queue', help='Name of queue', default="probot_queue", show_default=True)
 @click.option('-h', '--host', help='Name of host', default='localhost', show_default=True)
 def main(dependency, output_xml, timed_cluster_size, random_cluster_size, queue, host):
-    print(dependency)
-    print(output_xml)
-    print(timed_cluster_size)
-    print(random_cluster_size)
-    print(queue)
-    print(host)
+    """
+    Split and send clusters
+    :param dependency: dependency.json
+    :param output_xml: output.xml with execution times
+    :param timed_cluster_size: maximum size of the timed clusters
+    :param random_cluster_size: maximum size of the random clusters
+    :param queue: queue name
+    :param host: host
+    :return:
+    """
+    # print(dependency)
+    # print(output_xml)
+    # print(timed_cluster_size)
+    # print(random_cluster_size)
+    # print(queue)
+    # print(host)
     clusters = splitter.main(dependency, output_xml, timed_cluster_size, random_cluster_size)
     click.secho("Probot generated these clusters:", fg='cyan')
     count = 0

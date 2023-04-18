@@ -2,11 +2,22 @@ import pika
 
 
 def open_sending_connection(host):
+    """
+    Open connection
+    :param host:
+    :return:
+    """
     return pika.BlockingConnection(
         pika.ConnectionParameters(host=host))
 
 
 def open_sending_channel(queue, host):
+    """
+    Open channel
+    :param queue:
+    :param host:
+    :return:
+    """
     connection = open_sending_connection(host)
     channel = connection.channel()
 
@@ -15,6 +26,13 @@ def open_sending_channel(queue, host):
 
 
 def send_message(message, channel, queue):
+    """
+    Send message
+    :param message:
+    :param channel:
+    :param queue:
+    :return:
+    """
     channel.basic_publish(
         exchange='',
         routing_key=queue,
@@ -27,4 +45,9 @@ def send_message(message, channel, queue):
 
 
 def close_connection(connection):
+    """
+    Close connection
+    :param connection:
+    :return:
+    """
     connection.close()
