@@ -1,3 +1,4 @@
+import robot.errors
 from robot.api import TestSuite
 from pathlib import PurePath
 
@@ -37,7 +38,7 @@ def get_testcase_objects(received_data: list):
     try:
         # docker
         data = TestSuite.from_file_system(PurePath("test-suites"))
-    except KeyError:
+    except robot.errors.DataError:
         # local test
         data = TestSuite.from_file_system(PurePath("../suites"))
 
