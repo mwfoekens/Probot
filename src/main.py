@@ -3,7 +3,7 @@ import sender
 import click
 import json
 
-VERSION = "0.1"
+VERSION = "0.9"
 
 
 @click.command()

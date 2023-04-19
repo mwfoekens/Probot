@@ -1,15 +1,9 @@
-import os
-
 from robot.api import TestSuite, ExecutionResult
 from pathlib import PurePath
 from random import choice
 import json
 import click
 
-
-# docker does its thing and runs all clusters
-
-# all report snippets get assembled into one report
 
 def main(dependency_file: str or None = None, output: str or None = None, time_cluster_size: int = 5,
          random_cluster_size: int = 5) -> list:
