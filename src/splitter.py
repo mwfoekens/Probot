@@ -5,8 +5,7 @@ import json
 import click
 
 
-def main(dependency_file: str or None = None, output: str or None = None, time_cluster_size: int = 5,
-         random_cluster_size: int = 5) -> list:
+def main(dependency_file: str, output: str, time_cluster_size: int, random_cluster_size: int, suites_location) -> list:
     """
     Splits test suite into multiple clusters
 
@@ -14,6 +13,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     :param output:              xml file containing runtimes of the previous run
     :param time_cluster_size:   Amount of clusters for clusters split on time
     :param random_cluster_size: Amount of clusters for clusters that are randomly assigned
+    :param suites_location:     Location of the suites
     :return:                    Clusters
     """
     clusters: list = []
@@ -27,7 +27,7 @@ def main(dependency_file: str or None = None, output: str or None = None, time_c
     else:
         click.secho("No dependency.json passed.", fg='bright_red', bg='white')
 
-    result: ExecutionResult = retrieve_dry_run_results()
+    result: ExecutionResult = retrieve_dry_run_results(suites_location)
 
     # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
@@ -171,12 +171,13 @@ def add_cluster_group_to_all_clusters(clusters: list, cluster_group: list) -> No
     clusters.extend(cluster_group)
 
 
-def retrieve_dry_run_results() -> ExecutionResult:
+def retrieve_dry_run_results(suites_location: str) -> ExecutionResult:
     """
     Get the dry run results from Robot Test Suites
-    :return:    A Robot object containing the execution results
+    :param suites_location:     where the suites are stored
+    :return:                    A Robot object containing the execution results
     """
-    return TestSuite.from_file_system(PurePath("suites")).run(dryrun=True, outputdir=PurePath("../dryrunlog"))
+    return TestSuite.from_file_system(PurePath(suites_location)).run(dryrun=True, outputdir=PurePath("../dryrunlog"))
 
 
 def extract_xml(output: str) -> ExecutionResult:
