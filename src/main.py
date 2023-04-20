@@ -26,7 +26,7 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     :param queue:               queue name
     :param host:                host name
     :param suites_location:     location of the suites that need to be split up
-    :return:
+    :return:                    None
     """
     # print(dependency)
     # print(output_xml)

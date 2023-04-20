@@ -11,7 +11,7 @@ def prepare(data: list, output_path_location: str, test_suite_name: str) -> None
     :param data:                    data that was received by receiver
     :param output_path_location:    Location where data should be outputted
     :param test_suite_name:         Name of the test suite
-    :return:
+    :return:                        None
     """
     test_cases, imports = get_testcase_objects(data)
     suite = generate_testsuite_from_data(test_cases, imports, test_suite_name)
@@ -24,7 +24,7 @@ def execute(suite: TestSuite, output_path_location: PurePath, test_suite_name: s
     :param suite:                   the test suite
     :param output_path_location:    the output location
     :param test_suite_name:         Name of the test suite
-    :return:
+    :return:                        None
     """
     suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
 
@@ -33,7 +33,7 @@ def get_testcase_objects(received_data: list) -> tuple:
     """
     Get the test case objects that correspond to the test suite names
     :param received_data:       test case names
-    :return: the test case order and the imports
+    :return:                    the test case order and the imports
     """
     try:
         # docker
@@ -60,7 +60,7 @@ def get_imports(suite: TestSuite) -> set:
     """
     get imports from a test suite
     :param suite:       a test suite
-    :return: all test suite imports
+    :return:            all test suite imports
     """
     imports = set()
     for imported_item in suite.resource.imports:
@@ -73,7 +73,7 @@ def maintain_test_case_order(received_data: list, test_case_objects: list) -> li
     Sort the test case objects so that the order of the :var received_data and the :var test_case_objects are the same
     :param received_data:       the cluster
     :param test_case_objects:   the test case objects
-    :return: :var test_case_objects, but the same order as :var received_data
+    :return:                    :var test_case_objects, but the same order as :var received_data
     """
     sorted_list = []
     for index_received_data in range(len(received_data)):
@@ -92,7 +92,7 @@ def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name
     :param test_cases:      a list of test cases
     :param imports:         the imports this suite will require
     :param test_suite_name: Name of the testsuite
-    :return: the test suite
+    :return:                the test suite
     """
     suite = TestSuite(str(test_suite_name) + " Suite: " + str(COUNT))
     for import_item in imports:

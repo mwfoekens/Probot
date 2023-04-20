@@ -12,7 +12,7 @@ def combine_results(xml_location: str, output_location: str) -> None:
     Combine the results with rebot.
     :param xml_location:        Location of where the individual test outputs are stored
     :param output_location:     Location of where the combined log should be stored
-    :return:
+    :return:                    None
     """
     rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
             file.name.endswith(".xml")], outputdir=PurePath(output_location), output="output.xml",
@@ -25,7 +25,7 @@ def copy_output_directory(xml_location: str, output_location: str, directory: st
     :param xml_location:    Location of where the individual test outputs are stored
     :param output_location: Location of where the combined log should be stored
     :param directory:       Name of directory
-    :return:
+    :return:                None
     """
     if os.path.exists(PurePath(f"{output_location}/{directory}")):
         shutil.rmtree(PurePath(f"{output_location}/{directory}"))
@@ -38,7 +38,7 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
     :param xml_location:    Location of where the individual test outputs are stored
     :param output_location: Location of where the combined log should be stored
     :param file:            Name of file
-    :return:
+    :return:                None
     """
     if os.path.exists(PurePath(f"{output_location}/{file}")):
         os.remove(PurePath(f"{output_location}/{dir}"))

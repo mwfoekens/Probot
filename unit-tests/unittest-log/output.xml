@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.11.1 on win32)" generated="20230406 12:38:32.473" rpa="false" schemaversion="3">
+<suite id="s1" name="Probot" source="C:\Users\merel.foekens\PycharmProjects\Probot">
+<suite id="s1-s1" name="testSuite1" source="C:\Users\merel.foekens\PycharmProjects\Probot\testSuite1.robot">
+<test id="s1-s1-t1" name="Test Case D 1.1.1" line="5">
+<kw name="New Browser" library="Browser">
+<arg>browser=chromium</arg>
+<arg>headless=False</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<msg timestamp="20230406 12:38:36.474" level="INFO">{"browser": "chromium", "headless": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "deprecated_pos_args": [], "tracesDir": "C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\log\\browser\\traces\\71b72144-264e-47f7-9510-22f903706c74"}</msg>
+<msg timestamp="20230406 12:38:40.934" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"deprecated_pos_args":[],"tracesDir":"C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\log\\browser\\traces\\71b72144-264e-47f7-9510-22f903706c74"}</msg>
+<status status="PASS" starttime="20230406 12:38:36.474" endtime="20230406 12:38:40.934"/>
+</kw>
+<kw name="New Page" library="Browser">
+<arg>https://todomvc.com/examples/react/#/</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<msg timestamp="20230406 12:38:42.705" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230406 12:38:42.705" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230406 12:38:40.944" endtime="20230406 12:38:42.706"/>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:38:44.707" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20230406 12:38:42.706" endtime="20230406 12:38:44.707"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:38:44.708" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:38:44.707" endtime="20230406 12:38:44.708"/>
+</kw>
+<tag>A</tag>
+<status status="PASS" starttime="20230406 12:38:36.464" endtime="20230406 12:38:44.708"/>
+</test>
+<test id="s1-s1-t2" name="Test Case D 1.1.2" line="12">
+<kw name="Sleep" library="BuiltIn">
+<arg>3</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:38:47.805" level="INFO">Slept 3 seconds</msg>
+<status status="PASS" starttime="20230406 12:38:44.804" endtime="20230406 12:38:47.805"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:38:47.805" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:38:47.805" endtime="20230406 12:38:47.805"/>
+</kw>
+<tag>GroupingTagB</tag>
+<status status="PASS" starttime="20230406 12:38:44.798" endtime="20230406 12:38:47.805"/>
+</test>
+<test id="s1-s1-t3" name="Test Case D 1.2.1" line="17">
+<kw name="Sleep" library="BuiltIn">
+<arg>20</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:07.808" level="INFO">Slept 20 seconds</msg>
+<status status="PASS" starttime="20230406 12:38:47.808" endtime="20230406 12:39:07.808"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:07.808" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:07.808"/>
+</kw>
+<tag>A</tag>
+<status status="PASS" starttime="20230406 12:38:47.808" endtime="20230406 12:39:07.808"/>
+</test>
+<test id="s1-s1-t4" name="Test Case D 1.2.2" line="22">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:11.808" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:11.808"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:11.808" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:11.808" endtime="20230406 12:39:11.808"/>
+</kw>
+<tag>GroupingTagA</tag>
+<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:11.809"/>
+</test>
+<test id="s1-s1-t5" name="Test Case GroupTagA 1.1" line="27">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:15.810" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:11.809" endtime="20230406 12:39:15.810"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:15.810" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:15.810" endtime="20230406 12:39:15.810"/>
+</kw>
+<tag>Cooler Tag</tag>
+<tag>Cool Tag</tag>
+<tag>GroupingTagA</tag>
+<status status="PASS" starttime="20230406 12:39:11.809" endtime="20230406 12:39:15.810"/>
+</test>
+<test id="s1-s1-t6" name="Test Case GroupTagA 1.2" line="32">
+<kw name="Sleep" library="BuiltIn">
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:20.817" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:15.814" endtime="20230406 12:39:20.817"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:20.818" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:20.818"/>
+</kw>
+<tag>Another Tag</tag>
+<tag>Cooler Other Tag</tag>
+<tag>GroupingTagA</tag>
+<status status="PASS" starttime="20230406 12:39:15.814" endtime="20230406 12:39:20.818"/>
+</test>
+<test id="s1-s1-t7" name="Test Case GroupTagB 1.1" line="37">
+<kw name="Sleep" library="BuiltIn">
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:22.819" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:22.819"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:22.819" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:22.819" endtime="20230406 12:39:22.819"/>
+</kw>
+<tag>GroupingTagB</tag>
+<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:22.819"/>
+</test>
+<test id="s1-s1-t8" name="Test Case NoTag/D 1.1" line="42">
+<kw name="Sleep" library="BuiltIn">
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:27.822" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:22.821" endtime="20230406 12:39:27.822"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:27.822" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:27.822" endtime="20230406 12:39:27.822"/>
+</kw>
+<tag>B</tag>
+<status status="PASS" starttime="20230406 12:39:22.821" endtime="20230406 12:39:27.822"/>
+</test>
+<test id="s1-s1-t9" name="Test Case NoTag/D 1.2" line="47">
+<kw name="Sleep" library="BuiltIn">
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:37.826" level="INFO">Slept 10 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:27.825" endtime="20230406 12:39:37.826"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hey</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:37.826" level="INFO">Hey</msg>
+<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:37.826"/>
+</kw>
+<tag>B</tag>
+<status status="PASS" starttime="20230406 12:39:27.825" endtime="20230406 12:39:37.826"/>
+</test>
+<status status="PASS" starttime="20230406 12:38:32.595" endtime="20230406 12:39:37.826"/>
+</suite>
+<suite id="s1-s2" name="testSuite2" source="C:\Users\merel.foekens\PycharmProjects\Probot\testSuite2.robot">
+<test id="s1-s2-t1" name="Test Case GroupTagA 2.1" line="2">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:41.826" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:41.826"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>I am a message</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:41.826" level="INFO">I am a message</msg>
+<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:41.826"/>
+</kw>
+<tag>GroupingTagA</tag>
+<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:41.826"/>
+</test>
+<test id="s1-s2-t2" name="Test Case NoTag/D 2.1" line="7">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:45.827" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:45.827"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>I am a message</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:45.827" level="INFO">I am a message</msg>
+<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:45.827"/>
+</kw>
+<tag>A</tag>
+<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:45.827"/>
+</test>
+<test id="s1-s2-t3" name="Test Case D 2.2.3" line="12">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230406 12:39:49.827" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:49.827"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>I am a message</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230406 12:39:49.827" level="INFO">I am a message</msg>
+<status status="PASS" starttime="20230406 12:39:49.827" endtime="20230406 12:39:49.827"/>
+</kw>
+<tag>A</tag>
+<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:49.827"/>
+</test>
+<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:49.827"/>
+</suite>
+<status status="PASS" starttime="20230406 12:38:32.503" endtime="20230406 12:39:49.827"/>
+</suite>
+<statistics>
+<total>
+<stat pass="12" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="4" fail="0" skip="0">A</stat>
+<stat pass="1" fail="0" skip="0">Another Tag</stat>
+<stat pass="2" fail="0" skip="0">B</stat>
+<stat pass="1" fail="0" skip="0">Cooler Other Tag</stat>
+<stat pass="1" fail="0" skip="0">Cooler Tag</stat>
+<stat pass="1" fail="0" skip="0">Cool Tag</stat>
+<stat pass="4" fail="0" skip="0">GroupingTagA</stat>
+<stat pass="2" fail="0" skip="0">GroupingTagB</stat>
+</tag>
+<suite>
+<stat pass="12" fail="0" skip="0" id="s1" name="Probot">Probot</stat>
+<stat pass="9" fail="0" skip="0" id="s1-s1" name="testSuite1">Probot.testSuite1</stat>
+<stat pass="3" fail="0" skip="0" id="s1-s2" name="testSuite2">Probot.testSuite2</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

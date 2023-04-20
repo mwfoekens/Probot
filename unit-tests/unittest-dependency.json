@@ -1,0 +1,17 @@
+{
+  "dependencies": [
+    [
+      "Test Case D 1.1.1",
+      "Test Case D 1.1.2"
+    ],
+    [
+      "Test Case D 1.2.1",
+      "Test Case D 1.2.2",
+      "Test Case D 2.2.3"
+    ]
+  ],
+  "tags": [
+    "GroupingTagA",
+    "GroupingTagB"
+  ]
+}
