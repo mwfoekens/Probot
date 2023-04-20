@@ -5,12 +5,12 @@ from pathlib import PurePath
 COUNT = 0
 
 
-def prepare(data: list, output_path_location: str, test_suite_name: str):
+def prepare(data: list, output_path_location: str, test_suite_name: str) -> None:
     """
     Method that prepares the data and generates test suites
-    :param data: data that was received by receiver
-    :param output_path_location:
-    :param test_suite_name:
+    :param data:                    data that was received by receiver
+    :param output_path_location:    Location where data should be outputted
+    :param test_suite_name:         Name of the test suite
     :return:
     """
     test_cases, imports = get_testcase_objects(data)
@@ -18,21 +18,21 @@ def prepare(data: list, output_path_location: str, test_suite_name: str):
     execute(suite, PurePath(output_path_location), test_suite_name)
 
 
-def execute(suite: TestSuite, output_path_location: PurePath, test_suite_name: str):
+def execute(suite: TestSuite, output_path_location: PurePath, test_suite_name: str) -> None:
     """
     Execute the test suite and store information at a custom location
-    :param suite: the test suite
-    :param output_path_location: the output location
-    :param test_suite_name:
+    :param suite:                   the test suite
+    :param output_path_location:    the output location
+    :param test_suite_name:         Name of the test suite
     :return:
     """
     suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
 
 
-def get_testcase_objects(received_data: list):
+def get_testcase_objects(received_data: list) -> tuple:
     """
     Get the test case objects that correspond to the test suite names
-    :param received_data: test case names
+    :param received_data:       test case names
     :return: the test case order and the imports
     """
     try:
@@ -56,10 +56,10 @@ def get_testcase_objects(received_data: list):
     return maintain_test_case_order(received_data, test_case_objects), imports
 
 
-def get_imports(suite: TestSuite):
+def get_imports(suite: TestSuite) -> set:
     """
     get imports from a test suite
-    :param suite: a test suite
+    :param suite:       a test suite
     :return: all test suite imports
     """
     imports = set()
@@ -68,11 +68,11 @@ def get_imports(suite: TestSuite):
     return imports
 
 
-def maintain_test_case_order(received_data: list, test_case_objects: list):
+def maintain_test_case_order(received_data: list, test_case_objects: list) -> list:
     """
     Sort the test case objects so that the order of the :var received_data and the :var test_case_objects are the same
-    :param received_data: the cluster
-    :param test_case_objects: the test case objects
+    :param received_data:       the cluster
+    :param test_case_objects:   the test case objects
     :return: :var test_case_objects, but the same order as :var received_data
     """
     sorted_list = []
@@ -86,11 +86,11 @@ def maintain_test_case_order(received_data: list, test_case_objects: list):
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name: str):
+def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name: str) -> TestSuite:
     """
     Generate a test suite with all the test cases, and import all necessary imports
-    :param test_cases: a list of test cases
-    :param imports: the imports this suite will require
+    :param test_cases:      a list of test cases
+    :param imports:         the imports this suite will require
     :param test_suite_name: Name of the testsuite
     :return: the test suite
     """

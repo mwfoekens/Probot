@@ -4,11 +4,11 @@ import os
 import executor
 
 
-def connect_to_receiving_channel(connection, queue):
+def connect_to_receiving_channel(connection: pika.BlockingConnection, queue: str):
     """
     Connecting to a channel
-    :param connection:
-    :param queue:
+    :param connection:  Connection
+    :param queue:       Name of the queue
     :return: channel
     """
     channel = connection.channel()
@@ -18,13 +18,14 @@ def connect_to_receiving_channel(connection, queue):
     return channel
 
 
-def callback(ch, method, properties, body):
+def callback(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deliver,
+             properties: pika.spec.BasicProperties, body: bytes) -> None:
     """
     This method is called every time a message is received. This method deals with test cases and then acknowledges
-    :param ch:
-    :param method:
-    :param properties:
-    :param body:
+    :param ch:          channel
+    :param method:      method
+    :param properties:  properties
+    :param body:        message body
     :return:
     """
     print(" [x] Received %r" % body.decode())
@@ -41,17 +42,17 @@ def callback(ch, method, properties, body):
 
     executor.prepare(data, output_location, test_suite)
     executor.COUNT += 1
-    # time.sleep(body.count(b'.'))
+
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def channel_consume(channel, queue):
+def channel_consume(channel: pika.BlockingConnection.channel, queue: str) -> None:
     """
     Start consuming from the channel
-    :param channel:
-    :param queue:
-    :return: None
+    :param channel: channel
+    :param queue:   queue name
+    :return:
     """
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue=queue, on_message_callback=callback)
@@ -59,7 +60,7 @@ def channel_consume(channel, queue):
     channel.start_consuming()
 
 
-def start():
+def start() -> None:
     """
     Start the connection
     :return: None

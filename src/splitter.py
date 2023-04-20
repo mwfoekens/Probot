@@ -21,7 +21,8 @@ def main(dependency_file: str, output: str, time_cluster_size: int, random_clust
 
     # If there is a dependency.json, read it and generate cluster groups for it
     if dependency_file is not None:
-        file: dict = json.load(open(dependency_file))
+        with open(dependency_file, "r") as json_file:
+            file: dict = json.load(json_file)
         dependency_cluster: list = generate_clusters(file["dependencies"])
         tags_cluster: list = generate_clusters(file["tags"])
     else:
@@ -182,8 +183,3 @@ def retrieve_dry_run_results(suites_location: str) -> ExecutionResult:
 
 def extract_xml(output: str) -> ExecutionResult:
     return ExecutionResult(PurePath(output), merge=False)
-
-# res = main(dependency_file="dependency.json", output="log\\output.xml", time_cluster_size=2, random_cluster_size=1)
-# print("Clusters:")
-# for i in range(len(res)):
-#     print(f"Cluster {i + 1}: {res[i]}")

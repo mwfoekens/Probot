@@ -15,16 +15,17 @@ VERSION = "0.9"
 @click.option('-q', '--queue', help='Name of queue', default="probot_queue", show_default=True)
 @click.option('-h', '--host', help='Name of host', default='localhost', show_default=True)
 @click.option('-s', '--suites_location', help='Location of suites that need to be split up', required=True)
-def main(dependency, output_xml, timed_cluster_size, random_cluster_size, queue, host, suites_location):
+def main(dependency: str, output_xml: str, timed_cluster_size: int, random_cluster_size: int, queue: str, host: str,
+         suites_location: str) -> None:
     """
     Split and send clusters
-    :param dependency: dependency.json
-    :param output_xml: output.xml with execution times
-    :param timed_cluster_size: maximum size of the timed clusters
+    :param dependency:          dependency.json
+    :param output_xml:          output.xml with execution times
+    :param timed_cluster_size:  maximum size of the timed clusters
     :param random_cluster_size: maximum size of the random clusters
-    :param queue: queue name
-    :param host: host
-    :param suites_location: location of the suites that need to be split up
+    :param queue:               queue name
+    :param host:                host name
+    :param suites_location:     location of the suites that need to be split up
     :return:
     """
     # print(dependency)

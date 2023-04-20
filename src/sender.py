@@ -1,22 +1,22 @@
 import pika
 
 
-def open_sending_connection(host):
+def open_sending_connection(host: str) -> pika.BlockingConnection:
     """
     Open connection
-    :param host:
+    :param host:    Host name
     :return:
     """
     return pika.BlockingConnection(
         pika.ConnectionParameters(host=host))
 
 
-def open_sending_channel(queue, host):
+def open_sending_channel(queue: str, host: str) -> pika.adapters.BlockingConnection.channel:
     """
     Open channel
-    :param queue:
-    :param host:
-    :return:
+    :param queue:   Name of the queue
+    :param host:    Host name
+    :return:        Return the channel
     """
     connection = open_sending_connection(host)
     channel = connection.channel()
@@ -25,12 +25,12 @@ def open_sending_channel(queue, host):
     return channel
 
 
-def send_message(message, channel, queue):
+def send_message(message: str, channel: pika.adapters.BlockingConnection.channel, queue: str) -> None:
     """
     Send message
-    :param message:
-    :param channel:
-    :param queue:
+    :param message: the message that will be sent
+    :param channel: the channel that is used to publish
+    :param queue:   name of the queue
     :return:
     """
     channel.basic_publish(
@@ -44,10 +44,10 @@ def send_message(message, channel, queue):
     print(" [x] Sent %r" % message)
 
 
-def close_connection(connection):
+def close_connection(connection: pika.BlockingConnection) -> None:
     """
     Close connection
-    :param connection:
+    :param connection: the connection that needs to be closed
     :return:
     """
     connection.close()
