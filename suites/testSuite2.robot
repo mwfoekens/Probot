@@ -2,14 +2,19 @@
 Test Case GroupTagA 2.1
     [Tags]      GroupingTagA
     Sleep       4
-    Log         I am a message
+    Log         Hello World!
 
 Test Case NoTag/D 2.1
     [Tags]      A
     Sleep       4
-    Log         I am a message
+    Log         Hello World!
 
 Test Case D 2.2.3
     [Tags]      A
-    Sleep       4
-    Log         I am a message
+    Simple Keyword
+    Simple Keyword
+
+*** Keywords ***
+Simple Keyword
+    Sleep   4
+    Log    Hello World!

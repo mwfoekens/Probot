@@ -13,8 +13,8 @@ def prepare(data: list, output_path_location: str, test_suite_name: str) -> None
     :param test_suite_name:         Name of the test suite
     :return:                        None
     """
-    test_cases, imports = get_testcase_objects(data)
-    suite = generate_testsuite_from_data(test_cases, imports, test_suite_name)
+    test_cases, imports, keywords = get_testcase_objects(data)
+    suite = generate_testsuite_from_data(test_cases, imports, keywords, test_suite_name)
     execute(suite, PurePath(output_path_location), test_suite_name)
 
 
@@ -44,16 +44,28 @@ def get_testcase_objects(received_data: list) -> tuple:
 
     test_case_objects = []
     imports = set()
+    keywords = set()
 
     for suite in data.suites:
         imports.update(get_imports(suite))
+        keywords.update(get_keywords(suite))
+
         test_case_objects.extend([test_case_object for test_case_object in suite.tests for test_name in received_data if
                                   test_case_object.name == test_name])
 
     if len(received_data) != len(test_case_objects):
         raise IndexError("Not all test cases were found")
 
-    return maintain_test_case_order(received_data, test_case_objects), imports
+    return maintain_test_case_order(received_data, test_case_objects), imports, keywords
+
+
+def get_keywords(suite: TestSuite) -> set:
+    """
+    Get user defined keywords
+    :param suite:   Suite we want to find the keywords from
+    :return:        Set of keywords
+    """
+    return set(keyword for keyword in suite.resource.keywords)
 
 
 def get_imports(suite: TestSuite) -> set:
@@ -62,10 +74,7 @@ def get_imports(suite: TestSuite) -> set:
     :param suite:       a test suite
     :return:            all test suite imports
     """
-    imports = set()
-    for imported_item in suite.resource.imports:
-        imports.add(imported_item)
-    return imports
+    return set(imported_item for imported_item in suite.resource.imports)
 
 
 def maintain_test_case_order(received_data: list, test_case_objects: list) -> list:
@@ -86,17 +95,22 @@ def maintain_test_case_order(received_data: list, test_case_objects: list) -> li
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name: str) -> TestSuite:
+def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, test_suite_name: str) -> TestSuite:
     """
     Generate a test suite with all the test cases, and import all necessary imports
     :param test_cases:      a list of test cases
     :param imports:         the imports this suite will require
+    :param keywords:        User defined keywords for the suite
     :param test_suite_name: Name of the testsuite
     :return:                the test suite
     """
     suite = TestSuite(str(test_suite_name) + " Suite: " + str(COUNT))
+
     for import_item in imports:
         suite.resource.imports.library(import_item.name)
+
+    for keyword in keywords:
+        suite.resource.keywords.append(keyword)
 
     for test in test_cases:
         test_case = suite.tests.create(name=test.name)
@@ -107,5 +121,5 @@ def generate_testsuite_from_data(test_cases: list, imports: set, test_suite_name
 
     return suite
 
-# a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1"]
-# prepare(a)
+# a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1", "Test Case Not In Output XML 2"]
+# prepare(a, "log-combiner/test-output", "LOCAL TEST 1")

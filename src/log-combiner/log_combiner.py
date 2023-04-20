@@ -41,7 +41,7 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
     :return:                None
     """
     if os.path.exists(PurePath(f"{output_location}/{file}")):
-        os.remove(PurePath(f"{output_location}/{dir}"))
+        os.remove(PurePath(f"{output_location}/{file}"))
     shutil.copy(PurePath(f"{xml_location}/{file}"), PurePath(f"{output_location}/{file}"))
 
 
