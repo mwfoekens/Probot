@@ -1,3 +1,5 @@
+import os
+
 import robot.errors
 from robot.api import TestSuite
 from pathlib import PurePath
@@ -35,16 +37,18 @@ def get_testcase_objects(received_data: list) -> tuple:
     :param received_data:       test case names
     :return:                    the test case order and the imports
     """
+    test_case_objects = []
+    keywords = set()
     try:
         # docker
         data = TestSuite.from_file_system(PurePath("test-suites"))
+        imports = set(extended_file for extended_file in os.scandir(PurePath("test-suites")) if
+                      not extended_file.name.endswith(".robot") and "pycache" not in extended_file.name)
     except robot.errors.DataError:
         # local test
         data = TestSuite.from_file_system(PurePath("../suites"))
-
-    test_case_objects = []
-    imports = set()
-    keywords = set()
+        imports = set(extended_file for extended_file in os.scandir(PurePath("../suites")) if
+                      not extended_file.name.endswith(".robot") and "pycache" not in extended_file.name)
 
     for suite in data.suites:
         imports.update(get_imports(suite))
@@ -107,7 +111,10 @@ def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, 
     suite = TestSuite(str(test_suite_name) + " Suite: " + str(COUNT))
 
     for import_item in imports:
-        suite.resource.imports.library(import_item.name)
+        try:
+            suite.resource.imports.library(PurePath(import_item.path))
+        except AttributeError:
+            suite.resource.imports.library(import_item.name)
 
     for keyword in keywords:
         suite.resource.keywords.append(keyword)
@@ -117,9 +124,10 @@ def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, 
         test_case.tags = test.tags
 
         for keyword in test.body:
-            test_case.body.create_keyword(keyword.name, args=keyword.args)
+            test_case.body.create_keyword(keyword.name, args=keyword.args, assign=keyword.assign)
 
     return suite
 
-# a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1", "Test Case Not In Output XML 2"]
+# a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1", "Test Case Not In Output XML 2",
+#      "Test Case Not In Output XML 1"]
 # prepare(a, "log-combiner/test-output", "LOCAL TEST 1")

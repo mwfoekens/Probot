@@ -14,9 +14,10 @@ def combine_results(xml_location: str, output_location: str) -> None:
     :param output_location:     Location of where the combined log should be stored
     :return:                    None
     """
-    rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
-            file.name.endswith(".xml")], outputdir=PurePath(output_location), output="output.xml",
-          reporttitle="COMBINED REPORT", logtitle="COMBINED LOG")
+    if any(os.scandir(PurePath(xml_location))):
+        rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
+                file.name.endswith(".xml")], outputdir=PurePath(output_location), output="output.xml",
+              reporttitle="COMBINED REPORT", logtitle="COMBINED LOG")
 
 
 def copy_output_directory(xml_location: str, output_location: str, directory: str) -> None:
@@ -27,9 +28,14 @@ def copy_output_directory(xml_location: str, output_location: str, directory: st
     :param directory:       Name of directory
     :return:                None
     """
-    if os.path.exists(PurePath(f"{output_location}/{directory}")):
-        shutil.rmtree(PurePath(f"{output_location}/{directory}"))
-    shutil.copytree(PurePath(f"{xml_location}/{directory}"), PurePath(f"{output_location}/{directory}"))
+    complete_output_path = PurePath(f"{output_location}/{directory}")
+    complete_xml_path = PurePath(f"{xml_location}/{directory}")
+    if os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
+        shutil.rmtree(complete_output_path)
+        shutil.copytree(complete_xml_path, complete_output_path)
+
+    if not os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
+        shutil.copytree(complete_xml_path, complete_output_path)
 
 
 def copy_output_file(xml_location: str, output_location: str, file: str) -> None:
@@ -40,9 +46,15 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
     :param file:            Name of file
     :return:                None
     """
-    if os.path.exists(PurePath(f"{output_location}/{file}")):
-        os.remove(PurePath(f"{output_location}/{file}"))
-    shutil.copy(PurePath(f"{xml_location}/{file}"), PurePath(f"{output_location}/{file}"))
+    complete_output_path = PurePath(f"{output_location}/{file}")
+    complete_xml_path = PurePath(f"{xml_location}/{file}")
+    if os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
+
+        os.remove(complete_output_path)
+        shutil.copy(complete_xml_path, complete_output_path)
+
+    elif not os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
+        shutil.copy(complete_xml_path, complete_output_path)
 
 
 combine_results(XML_LOCATION, OUTPUT_LOCATION)

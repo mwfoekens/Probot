@@ -1,5 +1,6 @@
 *** Settings ***
 Library     Browser
+Library     ${CURDIR}/my_robot_func.py
 
 *** Test Cases ***
 Test Case D 1.1.1
@@ -24,9 +25,11 @@ Test Case D 1.2.1
     Log         Hello World!
 
 Test Case D 1.2.2
-    [Tags]      GroupingTagA
-    Sleep       4
-    Log         Hello World!
+    [Tags]          GroupingTagA
+    Open ToDo App
+    Add New Todo "This one will fail"
+    Get Text        span.todo-count    ==    3 items left
+    Log             This one is meant to fail
 
 Test Case GroupTagA 1.1
     [Tags]      GroupingTagA    Cool Tag      Cooler Tag
@@ -65,8 +68,11 @@ Test Case NoTag/D 1.2
 
 Test Case Not In Output XML 1
     [Tags]      F
+    ${rand_num}     Random Num
+    ${rand_num}     Evaluate    ${rand_num} + 1
+    Greet Someone    CGI
     Sleep       5
-    Log         Hello World!
+    Log         ${rand_num}
 
 Test Case Not In Output XML 2
     [Tags]      F
@@ -76,6 +82,11 @@ Test Case Not In Output XML 2
     Take Screenshot
     Sleep       5
     Log         Hello World!
+
+Test Case Not In Output XML 3
+    Open ToDo App
+    Add New Todo "HELLO WORLD"
+    Take Screenshot
 
 *** Keywords ***
 Add New Todo "${todo}"
