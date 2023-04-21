@@ -93,7 +93,7 @@ def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) ->
 
 def gather_tests(data: ExecutionResult, execution_times: dict, modulo_cluster: list) -> None:
     """
-    Gather tests and remove them from the module cluster
+    Gather tests and remove them from the modulo cluster
     :param data:                Test suite data from output.xml
     :param execution_times:     Dictionary where test names and their execution times are stored
     :param modulo_cluster:      Cluster containing the tests that aren't assigned yet
