@@ -46,13 +46,13 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     click.secho(f"{count} cluster(s)", fg='yellow')
 
     sender_connection = sender.open_sending_connection(host)
-    sender_channel = sender.open_sending_channel(queue, host)
+    sender_channel = sender.open_sending_channel(queue, sender_connection)
 
     click.secho("Connected. Sending: ", fg='cyan')
 
     for item in clusters:
         sender.send_message(json.dumps(item), sender_channel, queue)
-    sender_connection.close()
+    sender.close_connection(sender_connection)
 
     click.secho("All clusters sent. Exiting...", fg='cyan')
     sys.exit(0)

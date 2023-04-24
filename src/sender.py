@@ -11,14 +11,13 @@ def open_sending_connection(host: str) -> pika.BlockingConnection:
         pika.ConnectionParameters(host=host))
 
 
-def open_sending_channel(queue: str, host: str) -> pika.adapters.BlockingConnection.channel:
+def open_sending_channel(queue: str, connection: pika.BlockingConnection) -> pika.adapters.BlockingConnection.channel:
     """
     Open channel
-    :param queue:   Name of the queue
-    :param host:    Host name
+    :param queue:       Name of the queue
+    :param connection:  connection
     :return:        Return the channel
     """
-    connection = open_sending_connection(host)
     channel = connection.channel()
 
     channel.queue_declare(queue=queue, durable=True)
