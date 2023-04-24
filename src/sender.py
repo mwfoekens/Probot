@@ -7,8 +7,7 @@ def open_sending_connection(host: str) -> pika.BlockingConnection:
     :param host:    Host name
     :return:        A connection
     """
-    return pika.BlockingConnection(
-        pika.ConnectionParameters(host=host))
+    return pika.BlockingConnection(pika.ConnectionParameters(host=host))
 
 
 def open_sending_channel(queue: str, connection: pika.BlockingConnection) -> pika.adapters.BlockingConnection.channel:
