@@ -41,7 +41,7 @@ def send_message(message: str, channel: pika.adapters.BlockingConnection.channel
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             content_type="application/json"
         ))
-    print(" [x] Sent %r" % message)
+    print("\tSent %r" % message)
 
 
 def close_connection(connection: pika.BlockingConnection) -> None:

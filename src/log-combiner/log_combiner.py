@@ -18,6 +18,8 @@ def combine_results(xml_location: str, output_location: str) -> None:
         rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
                 file.name.endswith(".xml")], outputdir=PurePath(output_location), output="output.xml",
               reporttitle="COMBINED REPORT", logtitle="COMBINED LOG")
+    else:
+        print("No log files found.")
 
 
 def copy_output_directory(xml_location: str, output_location: str, directory: str) -> None:
