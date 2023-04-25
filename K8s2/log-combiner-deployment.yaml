@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: log-combiner
+  name: log-combiner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: log-combiner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/probot-default: "true"
+        io.kompose.service: log-combiner
+    spec:
+      containers:
+        - image: probot-log-combiner:latest
+          name: log-combiner
+          imagePullPolicy: Never
+          resources: { }
+          volumeMounts:
+            - mountPath: /test-output
+              name: test-outputs
+            - mountPath: /output
+              name: log-combiner-claim1
+      restartPolicy: Always
+      volumes:
+        - name: test-outputs
+          persistentVolumeClaim:
+            claimName: test-outputs
+        - name: log-combiner-claim1
+          persistentVolumeClaim:
+            claimName: log-combiner-claim1
+status: { }

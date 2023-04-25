@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: probot-consumer
+  name: probot-consumer
+spec:
+  ports:
+    - name: "playwright"
+      port: 52325
+      targetPort: 52325
+  selector:
+    io.kompose.service: probot-consumer
+status:
+  loadBalancer: { }
