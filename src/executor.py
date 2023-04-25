@@ -1,6 +1,5 @@
 import os
 
-import robot.errors
 from robot.api import TestSuite
 from pathlib import PurePath
 
@@ -39,16 +38,11 @@ def get_testcase_objects(received_data: list) -> tuple:
     """
     test_case_objects = []
     keywords = set()
-    try:
-        # docker
-        data = TestSuite.from_file_system(PurePath("test-suites"))
-        imports = set(extended_file for extended_file in os.scandir(PurePath("test-suites")) if
-                      not extended_file.name.endswith(".robot") and "pycache" not in extended_file.name)
-    except robot.errors.DataError:
-        # local test
-        data = TestSuite.from_file_system(PurePath("../suites"))
-        imports = set(extended_file for extended_file in os.scandir(PurePath("../suites")) if
-                      not extended_file.name.endswith(".robot") and "pycache" not in extended_file.name)
+    suite_location = find_test_suites()
+
+    data = TestSuite.from_file_system(PurePath(suite_location))
+    imports = set(extended_file for extended_file in os.scandir(PurePath(suite_location)) if
+                  not extended_file.name.endswith(".robot") and extended_file.name != "__pycache__")
 
     for suite in data.suites:
         imports.update(get_imports(suite))
@@ -58,9 +52,28 @@ def get_testcase_objects(received_data: list) -> tuple:
                                   test_case_object.name == test_name])
 
     if len(received_data) != len(test_case_objects):
-        raise IndexError("Not all test cases were found")
+        raise IndexError("Not all test cases were found\n", received_data, test_case_objects)
 
     return maintain_test_case_order(received_data, test_case_objects), imports, keywords
+
+
+def find_test_suites() -> str:
+    """
+    This function ensures the correct environment is always assumed. It should work still when ran locally.
+    :return: location of the test suite
+    """
+    try:
+        k8s = int(os.environ["USING_KUBERNETES"])
+    except KeyError:
+        k8s = 99
+
+    if k8s == 1:
+        suite_location = "test-suites/suites"
+    elif k8s == 0:
+        suite_location = "test-suites"
+    else:
+        suite_location = "../suites"
+    return suite_location
 
 
 def get_keywords(suite: TestSuite) -> set:

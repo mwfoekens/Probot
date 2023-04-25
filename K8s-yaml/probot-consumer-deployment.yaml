@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: probot-consumer
   name: probot-consumer
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       io.kompose.service: probot-consumer
@@ -33,6 +33,8 @@ spec:
               value: Docker Executor 1
             - name: QUEUE_NAME
               value: probot_queue
+            - name: USING_KUBERNETES
+              value: "1"
           image: consumer:latest
           name: consumer
           imagePullPolicy: Never
@@ -40,9 +42,9 @@ spec:
             - containerPort: 52325
           resources: { }
           volumeMounts:
-            - mountPath: ./test-output
+            - mountPath: /test-output
               name: test-outputs
-            - mountPath: ./test-suites
+            - mountPath: /test-suites
               name: probot-consumer-claim1
       restartPolicy: Always
       volumes:

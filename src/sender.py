@@ -1,13 +1,14 @@
 import pika
 
 
-def open_sending_connection(host: str) -> pika.BlockingConnection:
+def open_sending_connection(host: str, port: int) -> pika.BlockingConnection:
     """
     Open connection
     :param host:    Host name
+    :param port:    Port number
     :return:        A connection
     """
-    return pika.BlockingConnection(pika.ConnectionParameters(host=host))
+    return pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
 
 
 def open_sending_channel(queue: str, connection: pika.BlockingConnection) -> pika.adapters.BlockingConnection.channel:

@@ -18,9 +18,10 @@ VERSION = "0.9"
 @click.option('-r', '--random-cluster-size', help='Size of the random clusters', default=5, show_default=True, type=int)
 @click.option('-q', '--queue', help='Name of queue', default="probot_queue", show_default=True)
 @click.option('-h', '--host', help='Name of host', default='localhost', show_default=True)
+@click.option('-p', '--port', help='port of MQ', default=5672, show_default=True, type=int)
 @click.option('-s', '--suites_location', help='Location of suites that need to be split up', required=True)
 def main(dependency: str, output_xml: str, timed_cluster_size: int, random_cluster_size: int, queue: str, host: str,
-         suites_location: str) -> None:
+         port: int, suites_location: str) -> None:
     """
     Split and send clusters
     :param dependency:          dependency.json
@@ -29,6 +30,7 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     :param random_cluster_size: maximum size of the random clusters
     :param queue:               queue name
     :param host:                host name
+    :param port:                Port number
     :param suites_location:     location of the suites that need to be split up
     :return:                    None
     """
@@ -38,6 +40,7 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     # print(random_cluster_size)
     # print(queue)
     # print(host)
+    # print(port)
     # print(suites_location)
     clusters = splitter.main(dependency, output_xml, timed_cluster_size, random_cluster_size, suites_location)
     click.secho("Probot generated these clusters:", fg='cyan')
@@ -48,7 +51,7 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     click.secho(f"{count} cluster(s)", fg='yellow')
 
     try:
-        sender_connection = sender.open_sending_connection(host)
+        sender_connection = sender.open_sending_connection(host, port)
         sender_channel = sender.open_sending_channel(queue, sender_connection)
     except pika.exceptions.AMQPConnectionError as e:
         click.secho("Could not connect to queue.", err=True, fg="red")
