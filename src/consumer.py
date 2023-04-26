@@ -2,6 +2,7 @@ import pika
 import json
 import os
 import executor
+import uuid
 
 
 def connect_to_receiving_channel(connection: pika.BlockingConnection, queue: str) -> pika.BlockingConnection.channel:
@@ -32,8 +33,11 @@ def callback(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Delive
     data: list = json.loads(body.decode())
 
     try:
-        # docker
+        # docker/k8s
         test_suite: str = os.environ["EXECUTOR"]
+        if test_suite.startswith("Kubernetes"):
+            test_suite: str = test_suite + str(f" {uuid.uuid4()}")
+
         output_location: str = "test-output"
     except KeyError:
         # local test

@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
-    kompose.version: 1.28.0 (c4137012e)
-  creationTimestamp: null
   labels:
     io.kompose.service: probot-consumer
   name: probot-consumer
@@ -17,10 +13,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
-        kompose.version: 1.28.0 (c4137012e)
-      creationTimestamp: null
       labels:
         io.kompose.network/probot-rabbit-network: "true"
         io.kompose.service: probot-consumer
@@ -30,11 +22,9 @@ spec:
             - name: AMQP_URL
               value: amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5
             - name: EXECUTOR
-              value: Docker Executor 1
+              value: Kubernetes Executor
             - name: QUEUE_NAME
               value: probot_queue
-            - name: USING_KUBERNETES
-              value: "1"
           image: consumer:latest
           name: consumer
           imagePullPolicy: Never
@@ -45,13 +35,14 @@ spec:
             - mountPath: /test-output
               name: test-outputs
             - mountPath: /test-suites
-              name: probot-consumer-claim1
+              name: test-suites
       restartPolicy: Always
       volumes:
         - name: test-outputs
           persistentVolumeClaim:
             claimName: test-outputs
-        - name: probot-consumer-claim1
-          persistentVolumeClaim:
-            claimName: probot-consumer-claim1
+        - name: test-suites
+          hostPath:
+            path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/suites
+            type: Directory
 status: { }

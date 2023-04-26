@@ -61,7 +61,6 @@ services:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
       EXECUTOR: 'Docker Executor 3'
-      USING_KUBERNETES: 0
     depends_on:
       - rabbitmq
     ports:

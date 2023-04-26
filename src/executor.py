@@ -63,13 +63,11 @@ def find_test_suites() -> str:
     :return: location of the test suite
     """
     try:
-        k8s = int(os.environ["USING_KUBERNETES"])
+        k8s = os.environ["EXECUTOR"]
     except KeyError:
-        k8s = 99
+        k8s = False
 
-    if k8s == 1:
-        suite_location = "test-suites/suites"
-    elif k8s == 0:
+    if k8s:
         suite_location = "test-suites"
     else:
         suite_location = "../suites"

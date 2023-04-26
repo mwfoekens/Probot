@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
-    kompose.version: 1.28.0 (c4137012e)
-  creationTimestamp: null
   labels:
     io.kompose.service: rabbitmq
   name: rabbitmq
@@ -16,10 +12,6 @@ spec:
   strategy: { }
   template:
     metadata:
-      annotations:
-        kompose.cmd: C:\Users\merel.foekens\Downloads\kompose-windows-amd64.exe convert
-        kompose.version: 1.28.0 (c4137012e)
-      creationTimestamp: null
       labels:
         io.kompose.network/probot-rabbit-network: "true"
         io.kompose.service: rabbitmq
