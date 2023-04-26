@@ -1,3 +1,4 @@
+from pika.exceptions import AMQPConnectionError
 import pika
 import json
 import os
@@ -88,6 +89,8 @@ def start() -> None:
         channel_consume(channel, queue)
     except KeyboardInterrupt:
         connection.close(reply_text="Process stopped")
+    except AMQPConnectionError as e:
+        print(f"Args: {e.args}")
 
 
 start()

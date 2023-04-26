@@ -1,6 +1,6 @@
 import sys
 
-import pika.exceptions
+from pika.exceptions import AMQPConnectionError
 
 import splitter
 import sender
@@ -53,10 +53,9 @@ def main(dependency: str, output_xml: str, timed_cluster_size: int, random_clust
     try:
         sender_connection = sender.open_sending_connection(host, port)
         sender_channel = sender.open_sending_channel(queue, sender_connection)
-    except pika.exceptions.AMQPConnectionError as e:
+    except AMQPConnectionError as e:
         click.secho("Could not connect to queue.", err=True, fg="red")
-        print(e.args)
-        print(e)
+        click.secho(f"Args: {e.args}", err=True, fg="red")
         sys.exit(1)
 
     click.secho("Connected. Sending: ", fg='cyan')
