@@ -90,6 +90,7 @@ def start() -> None:
     except KeyboardInterrupt:
         connection.close(reply_text="Process stopped")
     except AMQPConnectionError as e:
+        print("Could not connect to queue.")
         print(f"Args: {e.args}")
 
 
