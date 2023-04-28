@@ -74,5 +74,6 @@ if __name__ == '__main__':
         f"{click.style('ob', fg='magenta')}"
         f"{click.style('ot', fg='cyan')} "
         f"{click.style(f'VER. {VERSION}', fg='bright_green')}")
-    click.secho("for Robot Framework (https://robotframework.org/)", fg='yellow')
+    click.secho("for Robot Framework\t https://robotframework.org/", fg='yellow')
+    click.secho("GitHub:\t\t\t https://github.com/mwfoekens/Probot", fg='blue')
     main()

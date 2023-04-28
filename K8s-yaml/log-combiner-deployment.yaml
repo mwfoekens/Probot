@@ -34,6 +34,6 @@ spec:
             claimName: test-outputs
         - name: output-mount
           hostPath:
-            path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/docker-output
+            path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/k8s-output
             type: Directory
 status: { }
