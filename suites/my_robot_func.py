@@ -7,4 +7,4 @@ def random_num():
 
 
 def greet_someone(name):
-    logger.console("Hi " + name + "!")
+    logger.info("Hi " + name + "! Hope you have a great day!")

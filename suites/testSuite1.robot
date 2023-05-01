@@ -77,8 +77,8 @@ Test Case Not In Output XML 1
 Test Case Not In Output XML 2
     [Tags]      F
     Open ToDo App
-    Add New Todo "Do robots dream of electric sheep?"
-    Add New Todo "What is reality"
+    Add New Todo "Test To Do"
+    Add New Todo "Test To Do 2"
     Take Screenshot
     Sleep       5
     Log         Hello World!
