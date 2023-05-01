@@ -33,9 +33,8 @@ This project assumes Python, Docker Desktop and RabbitMQ (+ Erlang) are installe
   have the correct mount paths.
 * In the ```k8s-yaml``` folder, run:
     * ```kubectl apply -f .```
-    * ```kubectl get service```
 
-* Note the port number next to 5672. This will allow you to connect to RabbitMQ's AMPQ locally.
-    * The port number next to 15672 will allow you to connect to the RabbitMQ management
-      site (```localhost:<port number>```)
+* To connect to RabbitMQ's AMPQ locally, use port ```32000```
+    * To connect to the RabbitMQ management site use port ```31000```
+    * These ports can be changed in ```rabbitmq-service.yaml```
 * Pass this port with your main function so you can send clusters to the queue.

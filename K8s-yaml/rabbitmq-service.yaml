@@ -14,6 +14,7 @@ spec:
     - name: "rabbitmq-management"
       port: 15672
       targetPort: 15672
+      nodePort: 31000
   selector:
     io.kompose.service: rabbitmq
 status:
