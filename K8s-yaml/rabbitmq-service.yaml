@@ -10,6 +10,7 @@ spec:
     - name: "rabbitmq-protocol"
       port: 5672
       targetPort: 5672
+      nodePort: 32000
     - name: "rabbitmq-management"
       port: 15672
       targetPort: 15672

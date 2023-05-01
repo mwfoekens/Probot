@@ -23,6 +23,7 @@ VERSION = "0.9"
 def main(dependency: str, output_xml: str, timed_cluster_size: int, random_cluster_size: int, queue: str, host: str,
          port: int, suites_location: str) -> None:
     """
+    \b
     Split and send clusters
     :param dependency:          dependency.json
     :param output_xml:          output.xml with execution times

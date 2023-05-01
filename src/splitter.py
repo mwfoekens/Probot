@@ -132,6 +132,7 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
     :return:                    None
     """
     found_in_dependency: bool = False
+    found_in_tags = False
 
     for dependency_index in range(len(file["dependencies"])):
 
@@ -141,8 +142,9 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
 
     for tags_index in range(len(file["tags"])):
 
-        if file["tags"][tags_index] in test.tags and found_in_dependency is False:
+        if file["tags"][tags_index] in test.tags and found_in_dependency is False and found_in_tags is False:
             add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, tags_index, modulo_cluster, test)
+            found_in_tags = True
 
 
 def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,
