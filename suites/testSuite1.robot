@@ -4,7 +4,7 @@ Library     ${CURDIR}/my_robot_func.py
 
 *** Test Cases ***
 Test Case D 1.1.1
-    [Tags]          A
+    [Tags]          My Tag
     New Browser     browser=chromium    headless=True
     New Page        https://todomvc.com/examples/react/#/
     Add New Todo "Hello"
@@ -20,7 +20,7 @@ Test Case D 1.1.2
     Sleep           2
 
 Test Case D 1.2.1
-    [Tags]      A
+    [Tags]      My Tag 2
     Sleep       4
     Log         Hello World!
 
@@ -32,12 +32,12 @@ Test Case D 1.2.2
     Log             This one is meant to fail
 
 Test Case GroupTagA 1.1
-    [Tags]      GroupingTagA    Cool Tag      Cooler Tag
+    [Tags]      GroupingTagA    My Tag      Another Tag
     Sleep       4
     Log         Hello World!
 
 Test Case GroupTagA 1.2
-    [Tags]          Another Tag     Cooler Other Tag        GroupingTagA
+    [Tags]          Another Tag     Very Nice Tag        GroupingTagA
     Open ToDo App
     Fill Text       input.new-todo      Hello world!
     Press Keys      input.new-todo      Enter
@@ -51,12 +51,12 @@ Test Case GroupTagB 1.1
     Log         Hello World!
 
 Test Case NoTag/D 1.1
-    [Tags]      B
+    [Tags]      Nice Tag
     Sleep       5
     Log         Hello World!
 
 Test Case NoTag/D 1.2
-    [Tags]      B
+    [Tags]          My Tag
     Open ToDo App
     Add New Todo "Learn Python"
     Add New Todo "Learn Java"
@@ -67,23 +67,24 @@ Test Case NoTag/D 1.2
     Log             Hello World!
 
 Test Case Not In Output XML 1
-    [Tags]      F
+    [Tags]          Completely Different Tag
     ${rand_num}     Random Num
     ${rand_num}     Evaluate    ${rand_num} + 1
     Greet Someone    CGI
-    Sleep       5
-    Log         ${rand_num}
+    Sleep           5
+    Log             ${rand_num}
 
 Test Case Not In Output XML 2
-    [Tags]      F
+    [Tags]          Another Tag
     Open ToDo App
     Add New Todo "Test To Do"
     Add New Todo "Test To Do 2"
     Take Screenshot
-    Sleep       5
-    Log         Hello World!
+    Sleep           5
+    Log             Hello World!
 
 Test Case Not In Output XML 3
+    [Tags]          Very Nice Tag
     Open ToDo App
     Add New Todo "HELLO WORLD"
     Take Screenshot

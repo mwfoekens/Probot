@@ -5,12 +5,12 @@ Test Case GroupTagA 2.1
     Log         Hello World!
 
 Test Case NoTag/D 2.1
-    [Tags]      A
+    [Tags]      My Tag
     Sleep       4
     Log         Hello World!
 
 Test Case D 2.2.3
-    [Tags]      A
+    [Tags]      My Tag
     Simple Keyword
     Simple Keyword
 
