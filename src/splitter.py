@@ -99,7 +99,8 @@ def gather_tests(data: ExecutionResult, execution_times: dict, modulo_cluster: l
     :param modulo_cluster:      Cluster containing the tests that aren't assigned yet
     :return:                    None
     """
-    for suite in data.suite.suites:
+    # For loop might have to be different, this works with the current test suite setup.
+    for suite in data.suite.suites[0].suites:
         for test in suite.tests:
 
             if test.name in modulo_cluster:
