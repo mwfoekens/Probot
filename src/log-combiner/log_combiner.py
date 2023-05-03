@@ -2,6 +2,7 @@ from robot import rebot
 from pathlib import PurePath
 import os
 import shutil
+import time
 
 XML_LOCATION = "test-output"
 OUTPUT_LOCATION = "output"
@@ -16,8 +17,9 @@ def combine_results(xml_location: str, output_location: str) -> None:
     """
     if any(os.scandir(PurePath(xml_location))):
         rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
-                file.name.endswith(".xml")], outputdir=PurePath(output_location), output="output.xml",
-              reporttitle="COMBINED REPORT", logtitle="COMBINED LOG")
+                file.name.endswith(".xml")], outputdir=PurePath(output_location), output=f"{NOW}-output.xml",
+              report=f"{NOW}-report.html", reporttitle="COMBINED REPORT", log=f"{NOW}-log.html",
+              logtitle="COMBINED LOG")
     else:
         print("No log files found.")
 
@@ -59,6 +61,7 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
         shutil.copy(complete_xml_path, complete_output_path)
 
 
+NOW = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
 combine_results(XML_LOCATION, OUTPUT_LOCATION)
 copy_output_directory(XML_LOCATION, OUTPUT_LOCATION, "browser")
 copy_output_file(XML_LOCATION, OUTPUT_LOCATION, "playwright-log.txt")

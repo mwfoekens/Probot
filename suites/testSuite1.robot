@@ -17,7 +17,7 @@ Test Case D 1.1.2
     Fill Text       input.new-todo      Have a nice day
     Press Keys      input.new-todo      Enter
     Take Screenshot
-    Sleep           2
+    Sleep           4
 
 Test Case D 1.2.1
     [Tags]      My Tag 2
@@ -47,7 +47,7 @@ Test Case GroupTagA 1.2
 
 Test Case GroupTagB 1.1
     [Tags]      GroupingTagB
-    Sleep       2
+    Sleep       10
     Log         Hello World!
 
 Test Case NoTag/D 1.1
