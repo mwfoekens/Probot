@@ -8,11 +8,14 @@ As of right now, [Robot Framework Browser](https://robotframework-browser.org/) 
 
 Install requirements:<br>
 ```pip install -r requirements.txt```<br><br>
-This project assumes Python, Docker Desktop and RabbitMQ (+ Erlang) are installed.
+This project assumes Python 3.11 and Docker Desktop are installed.<br>
+
+To generate an output.xml so the algorithm will split up tests based on execution time, run the ```.robot``` tests in
+the ```suites``` folder, and pass the output.xml file location in ```main.py```.
 
 ## Run example locally
 
-- Start the RabbitMQ container (a RabbitMQ Docker container was still used for this).
+- Start a RabbitMQ container (a RabbitMQ Docker container saves work and effort).
 - Run as many ```consumer.py``` instances as desired.
 - Start the ```main.py``` with arguments (run ```main.py --help``` for help).
 
@@ -29,8 +32,8 @@ This project assumes Python, Docker Desktop and RabbitMQ (+ Erlang) are installe
 
 #### ! When running Kubernetes, make sure to turn on Kubernetes in Docker Desktop !
 
-* Ensure that ```log-combiner-deployment.yaml``` and ```probot-consumer-deployment.yaml``` in the ```k8s-yaml``` folder
-  have the correct mount paths.
+* Ensure that ```log-combiner-deployment.yaml```, ```rabbitmq-deployment.yaml```
+  and ```probot-consumer-deployment.yaml``` in the ```k8s-yaml``` folder have the correct mount paths.
 * In the ```k8s-yaml``` folder, run:
     * ```kubectl apply -f .```
 

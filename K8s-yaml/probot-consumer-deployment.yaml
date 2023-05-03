@@ -20,7 +20,7 @@ spec:
       containers:
         - env:
             - name: AMQP_URL
-              value: amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5
+              value: amqp://guest:guest@rabbitmq:5672?connection_attempts=10&retry_delay=5
             - name: EXECUTOR
               value: Kubernetes Executor
             - name: QUEUE_NAME

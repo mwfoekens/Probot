@@ -6,28 +6,28 @@ from pathlib import PurePath
 COUNT = 0
 
 
-def prepare(data: list, output_path_location: str, test_suite_name: str) -> None:
+def prepare(data: list, output_path_location: str, test_suite_prefix: str) -> None:
     """
     Method that prepares the data and generates test suites
     :param data:                    data that was received by receiver
     :param output_path_location:    Location where data should be outputted
-    :param test_suite_name:         Name of the test suite
+    :param test_suite_prefix:       Name of the test suite
     :return:                        None
     """
     test_cases, imports, keywords = get_testcase_objects(data)
-    suite = generate_testsuite_from_data(test_cases, imports, keywords, test_suite_name)
-    execute(suite, PurePath(output_path_location), test_suite_name)
+    suite = generate_testsuite_from_data(test_cases, imports, keywords, test_suite_prefix)
+    execute(suite, PurePath(output_path_location), test_suite_prefix)
 
 
-def execute(suite: TestSuite, output_path_location: PurePath, test_suite_name: str) -> None:
+def execute(suite: TestSuite, output_path_location: PurePath, test_suite_prefix: str) -> None:
     """
     Execute the test suite and store information at a custom location
     :param suite:                   the test suite
     :param output_path_location:    the output location
-    :param test_suite_name:         Name of the test suite
+    :param test_suite_prefix:       Name of the test suite
     :return:                        None
     """
-    suite.run(outputdir=output_path_location, output=f"{test_suite_name}-{str(COUNT)}-output.xml")
+    suite.run(outputdir=output_path_location, output=f"{test_suite_prefix}-{str(COUNT)}-output.xml")
 
 
 def get_testcase_objects(received_data: list) -> tuple:
@@ -110,16 +110,16 @@ def maintain_test_case_order(received_data: list, test_case_objects: list) -> li
     return sorted_list
 
 
-def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, test_suite_name: str) -> TestSuite:
+def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, test_suite_prefix: str) -> TestSuite:
     """
     Generate a test suite with all the test cases, and import all necessary imports
-    :param test_cases:      a list of test cases
-    :param imports:         the imports this suite will require
-    :param keywords:        User defined keywords for the suite
-    :param test_suite_name: Name of the testsuite
-    :return:                the test suite
+    :param test_cases:          a list of test cases
+    :param imports:             the imports this suite will require
+    :param keywords:            User defined keywords for the suite
+    :param test_suite_prefix:   Name of the testsuite
+    :return:                    the test suite
     """
-    suite = TestSuite(str(test_suite_name) + " Suite: " + str(COUNT))
+    suite = TestSuite(str(test_suite_prefix) + " Suite: " + str(COUNT))
 
     for import_item in imports:
         try:

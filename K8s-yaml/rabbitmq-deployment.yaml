@@ -17,12 +17,22 @@ spec:
         io.kompose.service: rabbitmq
     spec:
       containers:
-        - image: rabbitmq:3.8-management
+        - image: rabbitmq:3-management
           name: rabbitmq
           ports:
             - containerPort: 5672
             - containerPort: 15672
           resources: { }
+          volumeMounts:
+            - mountPath: ./
+              name: configuration-file
+
       hostname: rabbitmq
       restartPolicy: Always
+      volumes:
+        - name: configuration-file
+          hostPath:
+            path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/rabbitmq.conf
+            type: File
+
 status: { }

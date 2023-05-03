@@ -33,19 +33,7 @@ def callback(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Delive
     print(" [x] Received %r" % body.decode())
     data: list = json.loads(body.decode())
 
-    try:
-        # docker/k8s
-        test_suite: str = os.environ["EXECUTOR"]
-        if test_suite.startswith("Kubernetes"):
-            test_suite: str = test_suite + str(f" {uuid.uuid4()}")
-
-        output_location: str = "test-output"
-    except KeyError:
-        # local test
-        test_suite: str = "LOCAL TEST"
-        output_location: str = "log-combiner/test-output"
-
-    executor.prepare(data, output_location, test_suite)
+    executor.prepare(data, OUTPUT_LOCATION, TEST_SUITE_PREFIX)
     executor.COUNT += 1
 
     print(" [x] Done")
@@ -65,28 +53,47 @@ def channel_consume(channel: pika.BlockingConnection.channel, queue: str) -> Non
     channel.start_consuming()
 
 
-def start() -> None:
+def init() -> tuple:
     """
-    Start the connection
-    :return: None
+    Initialise some variables when starting
+    :return: all required variables
     """
     try:
-        # docker
+        # docker/k8s
         amqp_url: str = os.environ['AMQP_URL']
         queue: str = os.environ['QUEUE_NAME']
         url: pika.URLParameters = pika.URLParameters(amqp_url)
-        print("Running on Docker \nURL: " + amqp_url + "\nqueue: " + queue)
+        test_suite_prefix: str = os.environ["EXECUTOR"]
+        output_location: str = "test-output"
+
+        conf = "Docker"
+        if test_suite_prefix.startswith("Kubernetes"):
+            test_suite_prefix: str = test_suite_prefix + str(f" {uuid.uuid4()}")
+            conf = "Kubernetes"
+
     except KeyError:
         # local test
         amqp_url: str = 'localhost'
         queue: str = 'probot_queue'
         url: pika.ConnectionParameters = pika.ConnectionParameters(amqp_url)
-        print("Running locally \nURL: " + amqp_url + "\nqueue: " + queue)
+        test_suite_prefix: str = "LOCAL TEST"
+        output_location: str = "log-combiner/test-output"
+        conf = "Local PC"
 
-    connection: pika.BlockingConnection = pika.BlockingConnection(url)
+    print(f"Running on {conf} \nURL: {amqp_url}\nQueue name: {queue}\nExecutor: {test_suite_prefix}")
+
+    return queue, url, test_suite_prefix, output_location
+
+
+def start() -> None:
+    """
+    Start the connection
+    :return: None
+    """
+    connection: pika.BlockingConnection = pika.BlockingConnection(URL)
     try:
-        channel = connect_to_receiving_channel(connection, queue)
-        channel_consume(channel, queue)
+        channel = connect_to_receiving_channel(connection, QUEUE)
+        channel_consume(channel, QUEUE)
     except KeyboardInterrupt:
         connection.close(reply_text="Process stopped")
     except AMQPConnectionError as e:
@@ -94,4 +101,5 @@ def start() -> None:
         print(f"Args: {e.args}")
 
 
+QUEUE, URL, TEST_SUITE_PREFIX, OUTPUT_LOCATION = init()
 start()

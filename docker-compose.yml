@@ -3,12 +3,14 @@ services:
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
-    image: rabbitmq:3.8-management
+    image: rabbitmq:3-management
     ports:
       - '5672:5672'
       - '15672:15672'
     networks:
       - rabbit-network
+    volumes:
+      - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
 
   probot-consumer:
     container_name: consumer
@@ -18,7 +20,7 @@ services:
     build:
       dockerfile: src/Dockerfile
     environment:
-      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=10&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
       EXECUTOR: 'Docker Executor 1'
       USING_KUBERNETES: 0

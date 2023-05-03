@@ -1,5 +1,6 @@
 import robot.result
 from robot.api import TestSuite, ExecutionResult
+from robot.model.testsuite import TestSuites
 from pathlib import PurePath
 from random import choice
 import json
@@ -99,12 +100,27 @@ def gather_tests(data: ExecutionResult, execution_times: dict, modulo_cluster: l
     :param modulo_cluster:      Cluster containing the tests that aren't assigned yet
     :return:                    None
     """
-    # For loop might have to be different, this works with the current test suite setup.
-    for suite in data.suite.suites[0].suites:
+    loop_location = find_test_suites(data)
+
+    for suite in loop_location:
         for test in suite.tests:
 
             if test.name in modulo_cluster:
                 add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test)
+
+
+def find_test_suites(data: ExecutionResult) -> TestSuites:
+    """
+    For some reason Robot tests can be nested quite far in :var data, so this method should help find
+    where the actual test suites are so it can be looped over
+    :param data: A robot execution result object
+    :return: the location where the actual suites are.
+    """
+    loop_location = data.suite.suites
+    while len(loop_location) == 1 and len(loop_location[0].tests) == 0:
+        loop_location = loop_location[0].suites
+        
+    return loop_location
 
 
 def greedy_sort(execution_times: dict, time_clusters_names: list, timed_clusters: list) -> None:
