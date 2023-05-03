@@ -24,7 +24,7 @@ spec:
             - containerPort: 15672
           resources: { }
           volumeMounts:
-            - mountPath: ./
+            - mountPath: /rabbitmq.conf
               name: configuration-file
 
       hostname: rabbitmq
@@ -33,6 +33,5 @@ spec:
         - name: configuration-file
           hostPath:
             path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/rabbitmq.conf
-            type: File
 
 status: { }
