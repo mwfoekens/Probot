@@ -35,8 +35,8 @@ def copy_output_directory(xml_location: str, output_location: str, directory: st
     :param directory:       Name of directory
     :return:                None
     """
-    complete_output_path = PurePath(f"{output_location}/{directory}")
-    complete_xml_path = PurePath(f"{xml_location}/{directory}")
+    complete_output_path = get_complete_path(output_location, directory)
+    complete_xml_path = get_complete_path(xml_location, directory)
     if os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
         shutil.rmtree(complete_output_path)
         shutil.copytree(complete_xml_path, complete_output_path)
@@ -53,8 +53,8 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
     :param file:            Name of file
     :return:                None
     """
-    complete_output_path = PurePath(f"{output_location}/{file}")
-    complete_xml_path = PurePath(f"{xml_location}/{file}")
+    complete_output_path = get_complete_path(output_location, file)
+    complete_xml_path = get_complete_path(xml_location, file)
     if os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
 
         os.remove(complete_output_path)
@@ -62,6 +62,16 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
 
     elif not os.path.exists(complete_output_path) and os.path.exists(complete_xml_path):
         shutil.copy(complete_xml_path, complete_output_path)
+
+
+def get_complete_path(path: str, item: str):
+    """
+    Get complete path of a file or directory
+    :param path:    Prefix path of the item.
+    :param item:    May be a file or directory.
+    :return:        Complete path
+    """
+    return PurePath(f"{path}/{item}")
 
 
 TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
