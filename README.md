@@ -32,8 +32,8 @@ the ```suites``` folder, and pass the output.xml file location in ```main.py```.
 
 #### ! When running Kubernetes, make sure to turn on Kubernetes in Docker Desktop !
 
-* Ensure that ```log-combiner-deployment.yaml```, ```rabbitmq-deployment.yaml```
-  and ```probot-consumer-deployment.yaml``` in the ```k8s-yaml``` folder have the correct mount paths.
+* Ensure that ```log-combiner-pod.yaml```, ```rabbitmq-deployment.yaml``` and ```probot-consumer-deployment.yaml``` in
+  the ```k8s-yaml``` folder have the correct mount paths.
 * In the ```k8s-yaml``` folder, run:
     * ```kubectl apply -f .```
 
