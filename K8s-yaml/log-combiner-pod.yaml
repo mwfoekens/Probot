@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  labels:
+    io.kompose.service: log-combiner
+  name: log-combiner
+spec:
+  containers:
+    - image: probot-log-combiner:latest
+      name: log-combiner
+      imagePullPolicy: Never
+      resources: { }
+      volumeMounts:
+        - mountPath: /test-output
+          name: test-outputs
+        - mountPath: /output
+          name: output-mount
+  restartPolicy: OnFailure
+  volumes:
+    - name: test-outputs
+      persistentVolumeClaim:
+        claimName: test-outputs
+    - name: output-mount
+      hostPath:
+        path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/k8s-output
+        type: Directory
+status: { }

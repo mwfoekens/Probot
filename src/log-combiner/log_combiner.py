@@ -1,4 +1,7 @@
+import sys
+
 from robot import rebot
+from robot.errors import DataError
 from pathlib import PurePath
 import os
 import shutil
@@ -16,12 +19,17 @@ def combine_results(xml_location: str, output_location: str) -> None:
     :return:                    None
     """
     if any(os.scandir(PurePath(xml_location))):
-        rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
-                file.name.endswith(".xml")], outputdir=PurePath(output_location), output=f"{NOW}-output.xml",
-              report=f"{NOW}-report.html", reporttitle="COMBINED REPORT", log=f"{NOW}-log.html",
-              logtitle="COMBINED LOG")
+        try:
+            rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
+                    file.name.endswith(".xml")], outputdir=PurePath(output_location), output=f"{TIMESTAMP}-output.xml",
+                  report=f"{TIMESTAMP}-report.html", reporttitle="COMBINED REPORT", log=f"{TIMESTAMP}-log.html",
+                  logtitle="COMBINED LOG")
+        except DataError:
+            print("Not ready.")
+            sys.exit(1)
     else:
         print("No log files found.")
+        sys.exit(1)
 
 
 def copy_output_directory(xml_location: str, output_location: str, directory: str) -> None:
@@ -61,7 +69,8 @@ def copy_output_file(xml_location: str, output_location: str, file: str) -> None
         shutil.copy(complete_xml_path, complete_output_path)
 
 
-NOW = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
+TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
 combine_results(XML_LOCATION, OUTPUT_LOCATION)
 copy_output_directory(XML_LOCATION, OUTPUT_LOCATION, "browser")
 copy_output_file(XML_LOCATION, OUTPUT_LOCATION, "playwright-log.txt")
+sys.exit(0)
