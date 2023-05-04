@@ -1,7 +1,6 @@
 import sys
 
 from robot import rebot
-from robot.errors import DataError
 from pathlib import PurePath
 import os
 import shutil
