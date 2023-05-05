@@ -18,22 +18,17 @@ def combine_results(xml_location: str, output_location: str, longest_runtime: st
     :param longest_runtime:     Runtime of longest cluster
     :return:                    None
     """
-    if any(os.scandir(PurePath(xml_location))):
+    output_xmls = [PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
+                   file.name.endswith(".xml")]
 
-        output_xmls = [PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
-                       file.name.endswith(".xml")]
-        rebot(*output_xmls,
-              outputdir=PurePath(output_location),
-              output=f"{TIMESTAMP}-output.xml",
-              report=f"{TIMESTAMP}-report.html",
-              log=f"{TIMESTAMP}-log.html",
-              reporttitle="COMBINED REPORT",
-              logtitle="COMBINED LOG",
-              name="Combined Suites")
-
-    else:
-        print("No log files found.")
-        sys.exit(1)
+    rebot(*output_xmls,
+          outputdir=PurePath(output_location),
+          output=f"{TIMESTAMP}-output.xml",
+          report=f"{TIMESTAMP}-report.html",
+          log=f"{TIMESTAMP}-log.html",
+          reporttitle="COMBINED REPORT",
+          logtitle="COMBINED LOG",
+          name="Combined Suites")
 
 
 def copy_output_directory(xml_location: str, output_location: str, directory: str) -> None:
@@ -94,9 +89,13 @@ def get_longest_running_cluster(xml_location):
     return '{0:02.0f}:{1:02.0f}'.format(*divmod(longest * 60, 60))
 
 
-TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
-longest_runtime = get_longest_running_cluster(XML_LOCATION)
-combine_results(XML_LOCATION, OUTPUT_LOCATION, longest_runtime)
+if any(os.scandir(PurePath(XML_LOCATION))):
+    TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
+    longest_runtime = get_longest_running_cluster(XML_LOCATION)
+    combine_results(XML_LOCATION, OUTPUT_LOCATION, longest_runtime)
+else:
+    print("No log files found.")
+    sys.exit(1)
 
 # Only copy the browser folder/playwright log if there's actually a log file created.
 # Otherwise the log combiner pod was too fast, and needs to wait.

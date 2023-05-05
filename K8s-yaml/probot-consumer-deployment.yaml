@@ -26,7 +26,7 @@ spec:
             - name: QUEUE_NAME
               value: probot_queue
             - name: INACTIVITY
-              value: 10
+              value: "10"
           image: consumer:latest
           name: consumer
           imagePullPolicy: Never
