@@ -10,18 +10,27 @@ XML_LOCATION = "test-output"
 OUTPUT_LOCATION = "output"
 
 
-def combine_results(xml_location: str, output_location: str) -> None:
+def combine_results(xml_location: str, output_location: str, longest_runtime: str) -> None:
     """
     Combine the results with rebot.
     :param xml_location:        Location of where the individual test outputs are stored
     :param output_location:     Location of where the combined log should be stored
+    :param longest_runtime:     Runtime of longest cluster
     :return:                    None
     """
     if any(os.scandir(PurePath(xml_location))):
-        rebot(*[PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
-                file.name.endswith(".xml")], outputdir=PurePath(output_location), output=f"{TIMESTAMP}-output.xml",
-              report=f"{TIMESTAMP}-report.html", reporttitle="COMBINED REPORT", log=f"{TIMESTAMP}-log.html",
-              logtitle="COMBINED LOG")
+
+        output_xmls = [PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
+                       file.name.endswith(".xml")]
+        rebot(*output_xmls,
+              outputdir=PurePath(output_location),
+              output=f"{TIMESTAMP}-output.xml",
+              report=f"{TIMESTAMP}-report.html",
+              log=f"{TIMESTAMP}-log.html",
+              reporttitle="COMBINED REPORT",
+              logtitle="COMBINED LOG",
+              name="Combined Suites")
+
     else:
         print("No log files found.")
         sys.exit(1)
@@ -74,8 +83,20 @@ def get_complete_path(path: str, item: str):
     return PurePath(f"{path}/{item}")
 
 
+def get_longest_running_cluster(xml_location):
+    time_files = [file for file in os.scandir(PurePath(xml_location)) if file.name.endswith("runtime.txt")]
+    times = []
+    for file in time_files:
+        with open(file, "r") as f:
+            times.append(float(f.readline()))
+
+    longest = sorted(times, reverse=True)[0]
+    return '{0:02.0f}:{1:02.0f}'.format(*divmod(longest * 60, 60))
+
+
 TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
-combine_results(XML_LOCATION, OUTPUT_LOCATION)
+longest_runtime = get_longest_running_cluster(XML_LOCATION)
+combine_results(XML_LOCATION, OUTPUT_LOCATION, longest_runtime)
 
 # Only copy the browser folder/playwright log if there's actually a log file created.
 # Otherwise the log combiner pod was too fast, and needs to wait.

@@ -4,24 +4,12 @@ import json
 import os
 import executor
 import uuid
+import time
+from pathlib import PurePath
 
 
-def connect_to_receiving_channel(connection: pika.BlockingConnection, queue: str) -> pika.BlockingConnection.channel:
-    """
-    Connecting to a channel
-    :param connection:  Connection
-    :param queue:       Name of the queue
-    :return:            channel
-    """
-    channel = connection.channel()
-
-    channel.queue_declare(queue=queue, durable=True)
-    print(' [*] Waiting for messages. To exit press CTRL+C')
-    return channel
-
-
-def callback(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deliver,
-             properties: pika.spec.BasicProperties, body: bytes) -> None:
+def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deliver,
+               properties: pika.spec.BasicProperties, body: bytes) -> None:
     """
     This method is called every time a message is received. This method deals with test cases and then acknowledges
     :param ch:          channel
@@ -40,30 +28,18 @@ def callback(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Delive
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def channel_consume(channel: pika.BlockingConnection.channel, queue: str) -> None:
-    """
-    Start consuming from the channel
-    :param channel: channel
-    :param queue:   queue name
-    :return:        None
-    """
-    channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=queue, on_message_callback=callback)
-
-    channel.start_consuming()
-
-
 def init() -> tuple:
     """
-    Initialise some variables when starting
+    Initialise some variables when starting. Is different based on if run on Docker Compose, K8s or local.
     :return: all required variables
     """
     try:
         # docker/k8s
         amqp_url: str = os.environ['AMQP_URL']
-        queue: str = os.environ['QUEUE_NAME']
-        url: pika.URLParameters = pika.URLParameters(amqp_url)
+        queue_name: str = os.environ['QUEUE_NAME']
+        connection_url: pika.URLParameters = pika.URLParameters(amqp_url)
         test_suite_prefix: str = os.environ["EXECUTOR"]
+        timeout: int = int(os.environ["INACTIVITY"])
         output_location: str = "test-output"
 
         conf = "Docker"
@@ -74,32 +50,70 @@ def init() -> tuple:
     except KeyError:
         # local test
         amqp_url: str = 'localhost'
-        queue: str = 'probot_queue'
-        url: pika.ConnectionParameters = pika.ConnectionParameters(amqp_url)
+        queue_name: str = 'probot_queue'
+        connection_url: pika.ConnectionParameters = pika.ConnectionParameters(amqp_url)
         test_suite_prefix: str = "LOCAL TEST"
+        timeout: int = 5
         output_location: str = "log-combiner/test-output"
         conf = "Local PC"
 
-    print(f"Running on {conf} \nURL: {amqp_url}\nQueue name: {queue}\nExecutor: {test_suite_prefix}")
+    print("==============================================================================")
+    print(f"Running on {conf}\nURL:\t\t{amqp_url}\nQueue name:\t{queue_name}\nExecutor:\t{test_suite_prefix}")
+    print("==============================================================================")
 
-    return queue, url, test_suite_prefix, output_location
+    return queue_name, connection_url, test_suite_prefix, output_location, timeout
 
 
-def start() -> None:
+def write_runtime_to_txt(output_location: str, test_suite_prefix: str, consumer_runtime: float) -> None:
+    """
+    Write the runtime to a txt file.
+    :param output_location:     Where to store the txt
+    :param test_suite_prefix:   Name of the consumer
+    :param consumer_runtime:             Runtime.
+    :return:                    None
+    """
+    with open(PurePath(f"{output_location}/{test_suite_prefix}-runtime.txt"), "w") as f:
+        f.write(f"{consumer_runtime}")
+
+
+def start(queue_name: str, connection_url: pika.URLParameters or pika.ConnectionParameters, timeout: int) -> None:
     """
     Start the connection
+    :param queue_name:              Name of the queue
+    :param connection_url:                     URL
+    :param timeout:      Inactivity timeout
     :return: None
     """
-    connection: pika.BlockingConnection = pika.BlockingConnection(URL)
     try:
-        channel = connect_to_receiving_channel(connection, QUEUE)
-        channel_consume(channel, QUEUE)
-    except KeyboardInterrupt:
-        connection.close(reply_text="Process stopped")
+        connection: pika.BlockingConnection = pika.BlockingConnection(connection_url)
+        channel = connection.channel()
+
+        channel.queue_declare(queue=queue_name, durable=True)
+        print(' [*] Waiting for messages...')
+        channel.basic_qos(prefetch_count=1)
+        for method_frame, properties, body in channel.consume(queue_name, auto_ack=False, inactivity_timeout=timeout):
+            if body is None:
+                break
+
+            on_message(channel, method_frame, properties, body)
+
+        channel.close()
+        connection.close()
+
     except AMQPConnectionError as e:
         print("Could not connect to queue.")
         print(f"Args: {e.args}")
 
 
-QUEUE, URL, TEST_SUITE_PREFIX, OUTPUT_LOCATION = init()
-start()
+queue, url, TEST_SUITE_PREFIX, OUTPUT_LOCATION, inactivity_timeout = init()
+
+start_time = time.time()
+start(queue, url, inactivity_timeout)
+runtime = time.time() - start_time - inactivity_timeout
+
+write_runtime_to_txt(OUTPUT_LOCATION, TEST_SUITE_PREFIX, runtime)
+
+print("==============================================================================")
+print(f"Consumer {TEST_SUITE_PREFIX} ran for {runtime} seconds.\n"
+      f"Saved in {OUTPUT_LOCATION}/{TEST_SUITE_PREFIX}-runtime.txt")
+print("==============================================================================")
