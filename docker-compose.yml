@@ -15,8 +15,6 @@ services:
   probot-consumer:
     container_name: consumer
     image: consumer:latest
-    #    tty: true
-    #    command: tail -F anything
     build:
       dockerfile: src/Dockerfile
     environment:
@@ -37,8 +35,6 @@ services:
   probot-consumer2:
     container_name: consumer-2
     image: consumer:latest
-    #    build:
-    #      dockerfile: src/Dockerfile
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
@@ -57,8 +53,6 @@ services:
   probot-consumer3:
     container_name: consumer-3
     image: consumer:latest
-    #    build:
-    #      dockerfile: src/Dockerfile
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
       QUEUE_NAME: 'probot_queue'

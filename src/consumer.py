@@ -28,6 +28,24 @@ def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deli
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
+def start_consuming(channel, queue_name, timeout):
+    first_message_received: bool = False
+    wait_time: int = 0
+    for method_frame, properties, body in channel.consume(queue_name, auto_ack=False, inactivity_timeout=timeout):
+        # If no first message was received, the consumer waits until a first message was received. Only when a
+        # single message has been received then the consumer is allowed to stop.
+        if body is None and first_message_received is True:
+            break
+        elif body is None and first_message_received is False:
+            wait_time += timeout
+            continue
+        else:
+            on_message(channel, method_frame, properties, body)
+            first_message_received = True
+            
+    return wait_time
+
+
 def init() -> tuple:
     """
     Initialise some variables when starting. Is different based on if run on Docker Compose, K8s or local.
@@ -76,13 +94,14 @@ def write_runtime_to_txt(output_location: str, test_suite_prefix: str, consumer_
         f.write(f"{consumer_runtime}")
 
 
-def start(queue_name: str, connection_url: pika.URLParameters or pika.ConnectionParameters, timeout: int) -> None:
+def start(queue_name: str, connection_url: pika.URLParameters or pika.ConnectionParameters, timeout: int) -> int:
     """
     Start the connection
-    :param queue_name:              Name of the queue
-    :param connection_url:                     URL
-    :param timeout:      Inactivity timeout
-    :return: None
+    :param queue_name:      Name of the queue
+    :param connection_url:  URL
+    :param timeout:         Inactivity timeout
+    :return:                The time that was waited before the first message was received.
+                            This time is not counted towards the time it took to run the tests
     """
     try:
         connection: pika.BlockingConnection = pika.BlockingConnection(connection_url)
@@ -91,14 +110,11 @@ def start(queue_name: str, connection_url: pika.URLParameters or pika.Connection
         channel.queue_declare(queue=queue_name, durable=True)
         print(' [*] Waiting for messages...')
         channel.basic_qos(prefetch_count=1)
-        for method_frame, properties, body in channel.consume(queue_name, auto_ack=False, inactivity_timeout=timeout):
-            if body is None:
-                break
-
-            on_message(channel, method_frame, properties, body)
+        wait_time = start_consuming(channel, queue_name, timeout)
 
         channel.close()
         connection.close()
+        return wait_time
 
     except AMQPConnectionError as e:
         print("Could not connect to queue.")
@@ -108,8 +124,8 @@ def start(queue_name: str, connection_url: pika.URLParameters or pika.Connection
 queue, url, TEST_SUITE_PREFIX, OUTPUT_LOCATION, inactivity_timeout = init()
 
 start_time = time.time()
-start(queue, url, inactivity_timeout)
-runtime = time.time() - start_time - inactivity_timeout
+waited_time = start(queue, url, inactivity_timeout)
+runtime = time.time() - start_time - inactivity_timeout - waited_time
 
 write_runtime_to_txt(OUTPUT_LOCATION, TEST_SUITE_PREFIX, runtime)
 
