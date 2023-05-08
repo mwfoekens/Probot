@@ -1,8 +1,8 @@
 # Probot
 
-### Distributed Parallelisation for [Robot Framework](https://robotframework.org/)
+## Distributed Parallelisation for [Robot Framework](https://robotframework.org/)
 
-## Table of Contents
+### Table of Contents
 
 1. [Run Locally](#run-example-locally)
 2. [Run with Docker Compose](#run-example-with-docker-compose)
