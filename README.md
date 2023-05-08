@@ -112,7 +112,7 @@ The most important part is the ```autoindex on;``` line, which will generate a h
 
 Add the same default.conf file as shown in the [Docker Compose](#docker-compose) section. Mount the default.conf to your
 deployment, and make sure that ```log-combiner-pod.yaml``` outputs in
-your ```output-location persistent volume claim```.
+your ```output-location```  persistent volume claim.
 
 Create an ```nginx-service.yaml```:
 
