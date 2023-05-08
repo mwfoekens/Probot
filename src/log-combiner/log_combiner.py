@@ -80,19 +80,25 @@ def get_complete_path(path: str, item: str):
 
 def get_longest_running_cluster(xml_location):
     time_files = [file for file in os.scandir(PurePath(xml_location)) if file.name.endswith("runtime.txt")]
-    times = []
+    times = dict()
     for file in time_files:
         with open(file, "r") as f:
-            times.append(float(f.readline()))
+            times[file.name] = float(f.readline())
 
-    longest = sorted(times, reverse=True)[0]
-    return '{0:02.0f}:{1:02.0f}'.format(*divmod(longest * 60, 60))
+    longest_time = sorted(times.values(), reverse=True)[0]
+    longest_name = ""
+    for key, value in times.items():
+        if longest_time == value:
+            longest_name = key.split("-")[0]
+    # '{0:02.0f}:{1:02.0f}'.format(*divmod(longest_time * 60, 60)
+    return longest_name, float(longest_time)
 
 
 if any(os.scandir(PurePath(XML_LOCATION))):
     TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
     longest_runtime = get_longest_running_cluster(XML_LOCATION)
-    combine_results(XML_LOCATION, OUTPUT_LOCATION, longest_runtime)
+    print(f"Longest running executor was {longest_runtime[0]} with {longest_runtime[1]} seconds")
+    combine_results(XML_LOCATION, OUTPUT_LOCATION, str(longest_runtime[1]))
 else:
     print("No log files found.")
     sys.exit(1)
