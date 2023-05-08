@@ -2,12 +2,25 @@
 
 ### Distributed Parallelisation for [Robot Framework](https://robotframework.org/)
 
+## Table of Contents
+
+1. [Run Locally](#run-example-locally)
+2. [Run with Docker Compose](#run-example-with-docker-compose)
+3. [Run with Kubernetes](#run-example-with-kubernetes)
+4. [Serving output with NGINX](#serving-output-files-with-nginx)
+    1. [Docker Compose](#docker-compose)
+    2. [Kubernetes](#kubernetes)
+
 This project is a graduation project, and mostly a proof of concept. This project requires a lot more time before being
 fully functional for all Robot Framework users. This project can run on Kubernetes & Docker, Docker Compose & Locally.
 As of right now, [Robot Framework Browser](https://robotframework-browser.org/) tests can run in this example.
 
 Install requirements:<br>
-```pip install -r requirements.txt```<br><br>
+
+```commandline
+pip install -r requirements.txt
+```
+
 This project assumes Python 3.11 and Docker Desktop are installed.<br>
 
 To generate an output.xml so the algorithm will split up tests based on execution time, run the ```.robot``` tests in
