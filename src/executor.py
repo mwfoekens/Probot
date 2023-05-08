@@ -141,4 +141,4 @@ def generate_testsuite_from_data(test_cases: list, imports: set, keywords: set, 
 
 # a = ["Test Case NoTag/D 1.2", "Test Case NoTag/D 2.1", "Test Case D 1.1.1", "Test Case Not In Output XML 2",
 #      "Test Case Not In Output XML 1"]
-# prepare(a, "log-combiner/test-output", "LOCAL TEST 1")
+# prepare(a, "logcombiner/test-output", "LOCAL TEST 1")

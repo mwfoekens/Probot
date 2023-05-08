@@ -42,7 +42,7 @@ def start_consuming(channel, queue_name, timeout):
         else:
             on_message(channel, method_frame, properties, body)
             first_message_received = True
-            
+
     return wait_time
 
 
@@ -72,7 +72,7 @@ def init() -> tuple:
         connection_url: pika.ConnectionParameters = pika.ConnectionParameters(amqp_url)
         test_suite_prefix: str = "LOCAL TEST"
         timeout: int = 5
-        output_location: str = "log-combiner/test-output"
+        output_location: str = "logcombiner/test-output"
         conf = "Local PC"
 
     print("==============================================================================")
@@ -121,15 +121,17 @@ def start(queue_name: str, connection_url: pika.URLParameters or pika.Connection
         print(f"Args: {e.args}")
 
 
-queue, url, TEST_SUITE_PREFIX, OUTPUT_LOCATION, inactivity_timeout = init()
+if __name__ == '__main__':
+    queue, url, TEST_SUITE_PREFIX, OUTPUT_LOCATION, inactivity_timeout = init()
 
-start_time = time.time()
-waited_time = start(queue, url, inactivity_timeout)
-runtime = time.time() - start_time - inactivity_timeout - waited_time
+    start_time = time.time()
+    waited_time = start(queue, url, inactivity_timeout)
+    end_time = time.time()
+    runtime = end_time - start_time - inactivity_timeout - waited_time
 
-write_runtime_to_txt(OUTPUT_LOCATION, TEST_SUITE_PREFIX, runtime)
+    write_runtime_to_txt(OUTPUT_LOCATION, TEST_SUITE_PREFIX, runtime)
 
-print("==============================================================================")
-print(f"Consumer {TEST_SUITE_PREFIX} ran for {runtime} seconds.\n"
-      f"Saved in {OUTPUT_LOCATION}/{TEST_SUITE_PREFIX}-runtime.txt")
-print("==============================================================================")
+    print("==============================================================================")
+    print(f"Consumer {TEST_SUITE_PREFIX} ran for {runtime} seconds.\n"
+          f"Saved in {OUTPUT_LOCATION}/{TEST_SUITE_PREFIX}-runtime.txt")
+    print("==============================================================================")

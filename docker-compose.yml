@@ -71,7 +71,7 @@ services:
   log-combiner:
     container_name: log-combiner
     image: probot-log-combiner:latest
-    build: src/log-combiner
+    build: src/logcombiner
     restart: no
     volumes:
       - test-outputs:/test-output

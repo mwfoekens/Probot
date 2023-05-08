@@ -110,21 +110,24 @@ def get_start_and_end_times(runtime: float) -> tuple:
     return start.strftime("%Y%m%d %H:%M:%S.%f"), end.strftime("%Y%m%d %H:%M:%S.%f")
 
 
-if any(os.scandir(PurePath(XML_LOCATION))):
-    TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
-    longest_runtime_name, longest_runtime = get_longest_running_cluster(XML_LOCATION)
-    print(f"Longest running executor was {longest_runtime_name} with {longest_runtime} seconds")
-    combine_results(XML_LOCATION, OUTPUT_LOCATION, get_start_and_end_times(longest_runtime))
-else:
-    print("No log files found.")
+if __name__ == '__main__':
+
+    if any(os.scandir(PurePath(XML_LOCATION))):
+        TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
+        longest_runtime_name, longest_runtime = get_longest_running_cluster(XML_LOCATION)
+        print(f"Longest running executor was {longest_runtime_name} with {longest_runtime} seconds")
+        combine_results(XML_LOCATION, OUTPUT_LOCATION, get_start_and_end_times(longest_runtime))
+
+    else:
+        print("No log files found.")
+        sys.exit(1)
+
+    # Only copy the browser folder/playwright log if there's actually a log file created.
+    # Otherwise the log combiner pod was too fast, and needs to wait.
+    if os.path.exists(PurePath(f"{OUTPUT_LOCATION}/{TIMESTAMP}-log.html")):
+        copy_output_directory(XML_LOCATION, OUTPUT_LOCATION, "browser")
+        copy_output_file(XML_LOCATION, OUTPUT_LOCATION, "playwright-log.txt")
+        sys.exit(0)
+
+    print("Not ready.")
     sys.exit(1)
-
-# Only copy the browser folder/playwright log if there's actually a log file created.
-# Otherwise the log combiner pod was too fast, and needs to wait.
-if os.path.exists(PurePath(f"{OUTPUT_LOCATION}/{TIMESTAMP}-log.html")):
-    copy_output_directory(XML_LOCATION, OUTPUT_LOCATION, "browser")
-    copy_output_file(XML_LOCATION, OUTPUT_LOCATION, "playwright-log.txt")
-    sys.exit(0)
-
-print("Not ready.")
-sys.exit(1)
