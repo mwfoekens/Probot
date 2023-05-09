@@ -1,247 +1,546 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 6.0.2 (Python 3.11.1 on win32)" generated="20230406 12:38:32.473" rpa="false" schemaversion="3">
-<suite id="s1" name="Probot" source="C:\Users\merel.foekens\PycharmProjects\Probot">
-<suite id="s1-s1" name="testSuite1" source="C:\Users\merel.foekens\PycharmProjects\Probot\testSuite1.robot">
-<test id="s1-s1-t1" name="Test Case D 1.1.1" line="5">
+<robot generator="Robot 6.0.2 (Python 3.11.1 on win32)" generated="20230502 15:04:05.118" rpa="false" schemaversion="3">
+<suite id="s1" name="Unittest-Suites" source="C:\Users\merel.foekens\PycharmProjects\Probot\unit-tests\unittest-suites">
+<suite id="s1-s1" name="testSuite1" source="C:\Users\merel.foekens\PycharmProjects\Probot\unit-tests\unittest-suites\testSuite1.robot">
+<test id="s1-s1-t1" name="Test Case D 1.1.1" line="6">
 <kw name="New Browser" library="Browser">
 <arg>browser=chromium</arg>
-<arg>headless=False</arg>
+<arg>headless=True</arg>
 <tag>BrowserControl</tag>
 <tag>Setter</tag>
 <doc>Create a new playwright Browser with specified options.</doc>
-<msg timestamp="20230406 12:38:36.474" level="INFO">{"browser": "chromium", "headless": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "deprecated_pos_args": [], "tracesDir": "C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\log\\browser\\traces\\71b72144-264e-47f7-9510-22f903706c74"}</msg>
-<msg timestamp="20230406 12:38:40.934" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"deprecated_pos_args":[],"tracesDir":"C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\log\\browser\\traces\\71b72144-264e-47f7-9510-22f903706c74"}</msg>
-<status status="PASS" starttime="20230406 12:38:36.474" endtime="20230406 12:38:40.934"/>
+<msg timestamp="20230502 15:04:06.624" level="INFO">{"browser": "chromium", "headless": true, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "deprecated_pos_args": [], "tracesDir": "C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\unit-tests\\unittest-log\\browser\\traces\\eff73d27-0ae6-463d-bcd8-ff5d6fdfde39"}</msg>
+<msg timestamp="20230502 15:04:09.426" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":true,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"deprecated_pos_args":[],"tracesDir":"C:\\Users\\merel.foekens\\PycharmProjects\\Probot\\unit-tests\\unittest-log\\browser\\traces\\eff73d27-0ae6-463d-bcd8-ff5d6fdfde39"}</msg>
+<status status="PASS" starttime="20230502 15:04:06.624" endtime="20230502 15:04:09.426"/>
 </kw>
 <kw name="New Page" library="Browser">
 <arg>https://todomvc.com/examples/react/#/</arg>
 <tag>BrowserControl</tag>
 <tag>Setter</tag>
 <doc>Open a new Page.</doc>
-<msg timestamp="20230406 12:38:42.705" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
-<msg timestamp="20230406 12:38:42.705" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
-<status status="PASS" starttime="20230406 12:38:40.944" endtime="20230406 12:38:42.706"/>
+<msg timestamp="20230502 15:04:11.512" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230502 15:04:11.513" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230502 15:04:09.426" endtime="20230502 15:04:11.513"/>
+</kw>
+<kw name="Add New Todo &quot;Hello&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:11.514" level="INFO">Fills the text 'Hello' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:11.514" endtime="20230502 15:04:11.554"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:11.554" endtime="20230502 15:04:11.597"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:11.513" endtime="20230502 15:04:11.597"/>
+</kw>
+<kw name="Add New Todo &quot;CGI!&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:11.598" level="INFO">Fills the text 'CGI!' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:11.598" endtime="20230502 15:04:11.617"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:11.617" endtime="20230502 15:04:11.631"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:11.597" endtime="20230502 15:04:11.631"/>
+</kw>
+<kw name="Take Screenshot" library="Browser">
+<tag>PageContent</tag>
+<doc>Takes a screenshot of the current window or element and saves it to disk.</doc>
+<msg timestamp="20230502 15:04:11.736" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/robotframework-browser-screenshot-1.png" target="_blank"&gt;&lt;img src="browser/screenshot/robotframework-browser-screenshot-1.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20230502 15:04:11.631" endtime="20230502 15:04:11.736"/>
+</kw>
+<tag>My Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:06.621" endtime="20230502 15:04:11.736"/>
+</test>
+<test id="s1-s1-t2" name="Test Case D 1.1.2" line="14">
+<kw name="Open ToDo App">
+<kw name="New Browser" library="Browser">
+<arg>browser=chromium</arg>
+<arg>headless=True</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<msg timestamp="20230502 15:04:11.774" level="INFO">Switching browser to browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<msg timestamp="20230502 15:04:11.775" level="INFO">Successfully changed active browser</msg>
+<msg timestamp="20230502 15:04:11.776" level="INFO">Reusing existing browser with id: browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<status status="PASS" starttime="20230502 15:04:11.773" endtime="20230502 15:04:11.776"/>
+</kw>
+<kw name="New Page" library="Browser">
+<arg>https://todomvc.com/examples/react/#/</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<msg timestamp="20230502 15:04:12.632" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230502 15:04:12.632" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230502 15:04:11.776" endtime="20230502 15:04:12.633"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:11.773" endtime="20230502 15:04:12.633"/>
+</kw>
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Have a nice day</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:12.633" level="INFO">Fills the text 'Have a nice day' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:12.633" endtime="20230502 15:04:12.664"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:12.664" endtime="20230502 15:04:12.704"/>
+</kw>
+<kw name="Take Screenshot" library="Browser">
+<tag>PageContent</tag>
+<doc>Takes a screenshot of the current window or element and saves it to disk.</doc>
+<msg timestamp="20230502 15:04:12.810" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/robotframework-browser-screenshot-2.png" target="_blank"&gt;&lt;img src="browser/screenshot/robotframework-browser-screenshot-2.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20230502 15:04:12.704" endtime="20230502 15:04:12.810"/>
 </kw>
 <kw name="Sleep" library="BuiltIn">
 <arg>2</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:38:44.707" level="INFO">Slept 2 seconds</msg>
-<status status="PASS" starttime="20230406 12:38:42.706" endtime="20230406 12:38:44.707"/>
-</kw>
-<kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
-<doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:38:44.708" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:38:44.707" endtime="20230406 12:38:44.708"/>
-</kw>
-<tag>A</tag>
-<status status="PASS" starttime="20230406 12:38:36.464" endtime="20230406 12:38:44.708"/>
-</test>
-<test id="s1-s1-t2" name="Test Case D 1.1.2" line="12">
-<kw name="Sleep" library="BuiltIn">
-<arg>3</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:38:47.805" level="INFO">Slept 3 seconds</msg>
-<status status="PASS" starttime="20230406 12:38:44.804" endtime="20230406 12:38:47.805"/>
-</kw>
-<kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
-<doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:38:47.805" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:38:47.805" endtime="20230406 12:38:47.805"/>
+<msg timestamp="20230502 15:04:14.811" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:12.810" endtime="20230502 15:04:14.811"/>
 </kw>
 <tag>GroupingTagB</tag>
-<status status="PASS" starttime="20230406 12:38:44.798" endtime="20230406 12:38:47.805"/>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:11.770" endtime="20230502 15:04:14.811"/>
 </test>
-<test id="s1-s1-t3" name="Test Case D 1.2.1" line="17">
-<kw name="Sleep" library="BuiltIn">
-<arg>20</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:07.808" level="INFO">Slept 20 seconds</msg>
-<status status="PASS" starttime="20230406 12:38:47.808" endtime="20230406 12:39:07.808"/>
-</kw>
-<kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
-<doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:07.808" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:07.808"/>
-</kw>
-<tag>A</tag>
-<status status="PASS" starttime="20230406 12:38:47.808" endtime="20230406 12:39:07.808"/>
-</test>
-<test id="s1-s1-t4" name="Test Case D 1.2.2" line="22">
+<test id="s1-s1-t3" name="Test Case D 1.2.1" line="22">
 <kw name="Sleep" library="BuiltIn">
 <arg>4</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:11.808" level="INFO">Slept 4 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:11.808"/>
+<msg timestamp="20230502 15:04:18.843" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:14.841" endtime="20230502 15:04:18.843"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:11.808" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:11.808" endtime="20230406 12:39:11.808"/>
+<msg timestamp="20230502 15:04:18.843" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:18.843" endtime="20230502 15:04:18.844"/>
+</kw>
+<tag>My Tag 2</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:14.839" endtime="20230502 15:04:18.844"/>
+</test>
+<test id="s1-s1-t4" name="Test Case D 1.2.2" line="27">
+<kw name="Open ToDo App">
+<kw name="New Browser" library="Browser">
+<arg>browser=chromium</arg>
+<arg>headless=True</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<msg timestamp="20230502 15:04:18.850" level="INFO">Switching browser to browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<msg timestamp="20230502 15:04:18.851" level="INFO">Successfully changed active browser</msg>
+<msg timestamp="20230502 15:04:18.851" level="INFO">Reusing existing browser with id: browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<status status="PASS" starttime="20230502 15:04:18.850" endtime="20230502 15:04:18.851"/>
+</kw>
+<kw name="New Page" library="Browser">
+<arg>https://todomvc.com/examples/react/#/</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<msg timestamp="20230502 15:04:19.873" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230502 15:04:19.874" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230502 15:04:18.851" endtime="20230502 15:04:19.874"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:18.849" endtime="20230502 15:04:19.874"/>
+</kw>
+<kw name="Add New Todo &quot;This one will fail&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:19.875" level="INFO">Fills the text 'This one will fail' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:19.875" endtime="20230502 15:04:19.923"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:19.923" endtime="20230502 15:04:19.971"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:19.874" endtime="20230502 15:04:19.972"/>
+</kw>
+<kw name="Get Text" library="Browser">
+<arg>span.todo-count</arg>
+<arg>==</arg>
+<arg>3 items left</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:21.029" level="INFO">Text: '1 item left'</msg>
+<msg timestamp="20230502 15:04:21.138" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/fail-screenshot-1.png" target="_blank"&gt;&lt;img src="browser/screenshot/fail-screenshot-1.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<msg timestamp="20230502 15:04:21.138" level="FAIL">Text '1 item left' (str) should be '3 items left' (str)</msg>
+<status status="FAIL" starttime="20230502 15:04:19.972" endtime="20230502 15:04:21.148"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>This one is meant to fail</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" starttime="20230502 15:04:21.148" endtime="20230502 15:04:21.149"/>
 </kw>
 <tag>GroupingTagA</tag>
-<status status="PASS" starttime="20230406 12:39:07.808" endtime="20230406 12:39:11.809"/>
+<tag>UNIT-TEST</tag>
+<status status="FAIL" starttime="20230502 15:04:18.847" endtime="20230502 15:04:21.149">Text '1 item left' (str) should be '3 items left' (str)</status>
 </test>
-<test id="s1-s1-t5" name="Test Case GroupTagA 1.1" line="27">
+<test id="s1-s1-t5" name="Test Case GroupTagA 1.1" line="34">
 <kw name="Sleep" library="BuiltIn">
 <arg>4</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:15.810" level="INFO">Slept 4 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:11.809" endtime="20230406 12:39:15.810"/>
+<msg timestamp="20230502 15:04:25.180" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:21.178" endtime="20230502 15:04:25.180"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:15.810" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:15.810" endtime="20230406 12:39:15.810"/>
-</kw>
-<tag>Cooler Tag</tag>
-<tag>Cool Tag</tag>
-<tag>GroupingTagA</tag>
-<status status="PASS" starttime="20230406 12:39:11.809" endtime="20230406 12:39:15.810"/>
-</test>
-<test id="s1-s1-t6" name="Test Case GroupTagA 1.2" line="32">
-<kw name="Sleep" library="BuiltIn">
-<arg>5</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:20.817" level="INFO">Slept 5 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:15.814" endtime="20230406 12:39:20.817"/>
-</kw>
-<kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
-<doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:20.818" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:20.818"/>
+<msg timestamp="20230502 15:04:25.181" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:25.181" endtime="20230502 15:04:25.181"/>
 </kw>
 <tag>Another Tag</tag>
-<tag>Cooler Other Tag</tag>
 <tag>GroupingTagA</tag>
-<status status="PASS" starttime="20230406 12:39:15.814" endtime="20230406 12:39:20.818"/>
+<tag>My Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:21.175" endtime="20230502 15:04:25.182"/>
 </test>
-<test id="s1-s1-t7" name="Test Case GroupTagB 1.1" line="37">
-<kw name="Sleep" library="BuiltIn">
-<arg>2</arg>
-<doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:22.819" level="INFO">Slept 2 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:22.819"/>
+<test id="s1-s1-t6" name="Test Case GroupTagA 1.2" line="39">
+<kw name="Open ToDo App">
+<kw name="New Browser" library="Browser">
+<arg>browser=chromium</arg>
+<arg>headless=True</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<msg timestamp="20230502 15:04:25.186" level="INFO">Switching browser to browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<msg timestamp="20230502 15:04:25.186" level="INFO">Successfully changed active browser</msg>
+<msg timestamp="20230502 15:04:25.186" level="INFO">Reusing existing browser with id: browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<status status="PASS" starttime="20230502 15:04:25.186" endtime="20230502 15:04:25.186"/>
 </kw>
-<kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
-<doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:22.819" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:22.819" endtime="20230406 12:39:22.819"/>
+<kw name="New Page" library="Browser">
+<arg>https://todomvc.com/examples/react/#/</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<msg timestamp="20230502 15:04:27.087" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230502 15:04:27.087" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230502 15:04:25.191" endtime="20230502 15:04:27.087"/>
 </kw>
-<tag>GroupingTagB</tag>
-<status status="PASS" starttime="20230406 12:39:20.818" endtime="20230406 12:39:22.819"/>
-</test>
-<test id="s1-s1-t8" name="Test Case NoTag/D 1.1" line="42">
+<status status="PASS" starttime="20230502 15:04:25.186" endtime="20230502 15:04:27.087"/>
+</kw>
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Hello world!</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:27.087" level="INFO">Fills the text 'Hello world!' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:27.087" endtime="20230502 15:04:27.127"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:27.127" endtime="20230502 15:04:27.167"/>
+</kw>
+<kw name="Take Screenshot" library="Browser">
+<tag>PageContent</tag>
+<doc>Takes a screenshot of the current window or element and saves it to disk.</doc>
+<msg timestamp="20230502 15:04:27.264" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/robotframework-browser-screenshot-3.png" target="_blank"&gt;&lt;img src="browser/screenshot/robotframework-browser-screenshot-3.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20230502 15:04:27.167" endtime="20230502 15:04:27.264"/>
+</kw>
 <kw name="Sleep" library="BuiltIn">
 <arg>5</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:27.822" level="INFO">Slept 5 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:22.821" endtime="20230406 12:39:27.822"/>
+<msg timestamp="20230502 15:04:32.264" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:27.264" endtime="20230502 15:04:32.264"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:27.822" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:27.822" endtime="20230406 12:39:27.822"/>
+<msg timestamp="20230502 15:04:32.264" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:32.264" endtime="20230502 15:04:32.264"/>
 </kw>
-<tag>B</tag>
-<status status="PASS" starttime="20230406 12:39:22.821" endtime="20230406 12:39:27.822"/>
+<tag>Another Tag</tag>
+<tag>GroupingTagA</tag>
+<tag>UNIT-TEST</tag>
+<tag>Very Nice Tag</tag>
+<status status="PASS" starttime="20230502 15:04:25.182" endtime="20230502 15:04:32.264"/>
 </test>
-<test id="s1-s1-t9" name="Test Case NoTag/D 1.2" line="47">
+<test id="s1-s1-t7" name="Test Case GroupTagB 1.1" line="48">
+<kw name="Sleep" library="BuiltIn">
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230502 15:04:34.318" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:32.318" endtime="20230502 15:04:34.318"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hello World!</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230502 15:04:34.318" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:34.318" endtime="20230502 15:04:34.318"/>
+</kw>
+<tag>GroupingTagB</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:32.318" endtime="20230502 15:04:34.318"/>
+</test>
+<test id="s1-s1-t8" name="Test Case NoTag/D 1.1" line="53">
+<kw name="Sleep" library="BuiltIn">
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230502 15:04:39.319" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:34.318" endtime="20230502 15:04:39.319"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hello World!</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230502 15:04:39.319" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:39.319" endtime="20230502 15:04:39.319"/>
+</kw>
+<tag>Nice Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:34.318" endtime="20230502 15:04:39.319"/>
+</test>
+<test id="s1-s1-t9" name="Test Case NoTag/D 1.2" line="58">
+<kw name="Open ToDo App">
+<kw name="New Browser" library="Browser">
+<arg>browser=chromium</arg>
+<arg>headless=True</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<msg timestamp="20230502 15:04:39.319" level="INFO">Switching browser to browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<msg timestamp="20230502 15:04:39.319" level="INFO">Successfully changed active browser</msg>
+<msg timestamp="20230502 15:04:39.319" level="INFO">Reusing existing browser with id: browser=13023d7a-3c00-467d-abcf-c3b10736498c</msg>
+<status status="PASS" starttime="20230502 15:04:39.319" endtime="20230502 15:04:39.319"/>
+</kw>
+<kw name="New Page" library="Browser">
+<arg>https://todomvc.com/examples/react/#/</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<msg timestamp="20230502 15:04:40.185" level="INFO">Successfully initialized new page object and opened url: https://todomvc.com/examples/react/#/</msg>
+<msg timestamp="20230502 15:04:40.185" level="INFO">No context was open. New context was automatically opened when this page is created.</msg>
+<status status="PASS" starttime="20230502 15:04:39.319" endtime="20230502 15:04:40.185"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:39.319" endtime="20230502 15:04:40.185"/>
+</kw>
+<kw name="Add New Todo &quot;Learn Python&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:40.186" level="INFO">Fills the text 'Learn Python' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:40.186" endtime="20230502 15:04:40.317"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:40.318" endtime="20230502 15:04:40.356"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:40.185" endtime="20230502 15:04:40.357"/>
+</kw>
+<kw name="Add New Todo &quot;Learn Java&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:40.358" level="INFO">Fills the text 'Learn Java' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:40.357" endtime="20230502 15:04:40.374"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:40.375" endtime="20230502 15:04:40.388"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:40.357" endtime="20230502 15:04:40.388"/>
+</kw>
+<kw name="Add New Todo &quot;Learn C#&quot;" sourcename="Add New Todo &quot;${todo}&quot;">
+<kw name="Fill Text" library="Browser">
+<arg>input.new-todo</arg>
+<arg>${todo}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:40.389" level="INFO">Fills the text 'Learn C#' in the given field.</msg>
+<status status="PASS" starttime="20230502 15:04:40.389" endtime="20230502 15:04:40.403"/>
+</kw>
+<kw name="Press Keys" library="Browser">
+<arg>input.new-todo</arg>
+<arg>Enter</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Types the given key combination into element found by ``selector``.</doc>
+<status status="PASS" starttime="20230502 15:04:40.403" endtime="20230502 15:04:40.418"/>
+</kw>
+<status status="PASS" starttime="20230502 15:04:40.388" endtime="20230502 15:04:40.418"/>
+</kw>
+<kw name="Take Screenshot" library="Browser">
+<tag>PageContent</tag>
+<doc>Takes a screenshot of the current window or element and saves it to disk.</doc>
+<msg timestamp="20230502 15:04:40.502" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/robotframework-browser-screenshot-4.png" target="_blank"&gt;&lt;img src="browser/screenshot/robotframework-browser-screenshot-4.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20230502 15:04:40.418" endtime="20230502 15:04:40.502"/>
+</kw>
+<kw name="Get Text" library="Browser">
+<arg>span.todo-count</arg>
+<arg>==</arg>
+<arg>3 items left</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<msg timestamp="20230502 15:04:40.525" level="INFO">Text: '3 items left'</msg>
+<status status="PASS" starttime="20230502 15:04:40.503" endtime="20230502 15:04:40.525"/>
+</kw>
 <kw name="Sleep" library="BuiltIn">
 <arg>10</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:37.826" level="INFO">Slept 10 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:27.825" endtime="20230406 12:39:37.826"/>
+<msg timestamp="20230502 15:04:50.527" level="INFO">Slept 10 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:40.525" endtime="20230502 15:04:50.527"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>Hey</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:37.826" level="INFO">Hey</msg>
-<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:37.826"/>
+<msg timestamp="20230502 15:04:50.527" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:50.527" endtime="20230502 15:04:50.527"/>
 </kw>
-<tag>B</tag>
-<status status="PASS" starttime="20230406 12:39:27.825" endtime="20230406 12:39:37.826"/>
+<tag>My Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:39.319" endtime="20230502 15:04:50.527"/>
 </test>
-<status status="PASS" starttime="20230406 12:38:32.595" endtime="20230406 12:39:37.826"/>
+<status status="FAIL" starttime="20230502 15:04:05.142" endtime="20230502 15:04:50.555"/>
 </suite>
-<suite id="s1-s2" name="testSuite2" source="C:\Users\merel.foekens\PycharmProjects\Probot\testSuite2.robot">
+<suite id="s1-s2" name="testSuite2" source="C:\Users\merel.foekens\PycharmProjects\Probot\unit-tests\unittest-suites\testSuite2.robot">
 <test id="s1-s2-t1" name="Test Case GroupTagA 2.1" line="2">
 <kw name="Sleep" library="BuiltIn">
 <arg>4</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:41.826" level="INFO">Slept 4 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:41.826"/>
+<msg timestamp="20230502 15:04:54.555" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:50.555" endtime="20230502 15:04:54.555"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>I am a message</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:41.826" level="INFO">I am a message</msg>
-<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:41.826"/>
+<msg timestamp="20230502 15:04:54.555" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:54.555" endtime="20230502 15:04:54.555"/>
 </kw>
 <tag>GroupingTagA</tag>
-<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:41.826"/>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:50.555" endtime="20230502 15:04:54.555"/>
 </test>
 <test id="s1-s2-t2" name="Test Case NoTag/D 2.1" line="7">
 <kw name="Sleep" library="BuiltIn">
 <arg>4</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:45.827" level="INFO">Slept 4 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:45.827"/>
+<msg timestamp="20230502 15:04:58.555" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:54.555" endtime="20230502 15:04:58.555"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>I am a message</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:45.827" level="INFO">I am a message</msg>
-<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:45.827"/>
+<msg timestamp="20230502 15:04:58.556" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:04:58.556" endtime="20230502 15:04:58.556"/>
 </kw>
-<tag>A</tag>
-<status status="PASS" starttime="20230406 12:39:41.826" endtime="20230406 12:39:45.827"/>
+<tag>My Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:54.555" endtime="20230502 15:04:58.556"/>
 </test>
 <test id="s1-s2-t3" name="Test Case D 2.2.3" line="12">
+<kw name="Simple Keyword">
 <kw name="Sleep" library="BuiltIn">
 <arg>4</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<msg timestamp="20230406 12:39:49.827" level="INFO">Slept 4 seconds</msg>
-<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:49.827"/>
+<msg timestamp="20230502 15:05:02.557" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:04:58.557" endtime="20230502 15:05:02.557"/>
 </kw>
 <kw name="Log" library="BuiltIn">
-<arg>I am a message</arg>
+<arg>Hello World!</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20230406 12:39:49.827" level="INFO">I am a message</msg>
-<status status="PASS" starttime="20230406 12:39:49.827" endtime="20230406 12:39:49.827"/>
+<msg timestamp="20230502 15:05:02.557" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:05:02.557" endtime="20230502 15:05:02.557"/>
 </kw>
-<tag>A</tag>
-<status status="PASS" starttime="20230406 12:39:45.827" endtime="20230406 12:39:49.827"/>
+<status status="PASS" starttime="20230502 15:04:58.557" endtime="20230502 15:05:02.557"/>
+</kw>
+<kw name="Simple Keyword">
+<kw name="Sleep" library="BuiltIn">
+<arg>4</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<msg timestamp="20230502 15:05:06.558" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" starttime="20230502 15:05:02.557" endtime="20230502 15:05:06.558"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>Hello World!</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230502 15:05:06.558" level="INFO">Hello World!</msg>
+<status status="PASS" starttime="20230502 15:05:06.558" endtime="20230502 15:05:06.558"/>
+</kw>
+<status status="PASS" starttime="20230502 15:05:02.557" endtime="20230502 15:05:06.558"/>
+</kw>
+<tag>My Tag</tag>
+<tag>UNIT-TEST</tag>
+<status status="PASS" starttime="20230502 15:04:58.557" endtime="20230502 15:05:06.558"/>
 </test>
-<status status="PASS" starttime="20230406 12:39:37.826" endtime="20230406 12:39:49.827"/>
+<status status="PASS" starttime="20230502 15:04:50.555" endtime="20230502 15:05:06.558"/>
 </suite>
-<status status="PASS" starttime="20230406 12:38:32.503" endtime="20230406 12:39:49.827"/>
+<status status="FAIL" starttime="20230502 15:04:05.124" endtime="20230502 15:05:06.558"/>
 </suite>
 <statistics>
 <total>
-<stat pass="12" fail="0" skip="0">All Tests</stat>
+<stat pass="11" fail="1" skip="0">All Tests</stat>
 </total>
 <tag>
-<stat pass="4" fail="0" skip="0">A</stat>
-<stat pass="1" fail="0" skip="0">Another Tag</stat>
-<stat pass="2" fail="0" skip="0">B</stat>
-<stat pass="1" fail="0" skip="0">Cooler Other Tag</stat>
-<stat pass="1" fail="0" skip="0">Cooler Tag</stat>
-<stat pass="1" fail="0" skip="0">Cool Tag</stat>
-<stat pass="4" fail="0" skip="0">GroupingTagA</stat>
+<stat pass="2" fail="0" skip="0">Another Tag</stat>
+<stat pass="3" fail="1" skip="0">GroupingTagA</stat>
 <stat pass="2" fail="0" skip="0">GroupingTagB</stat>
+<stat pass="5" fail="0" skip="0">My Tag</stat>
+<stat pass="1" fail="0" skip="0">My Tag 2</stat>
+<stat pass="1" fail="0" skip="0">Nice Tag</stat>
+<stat pass="11" fail="1" skip="0">UNIT-TEST</stat>
+<stat pass="1" fail="0" skip="0">Very Nice Tag</stat>
 </tag>
 <suite>
-<stat pass="12" fail="0" skip="0" id="s1" name="Probot">Probot</stat>
-<stat pass="9" fail="0" skip="0" id="s1-s1" name="testSuite1">Probot.testSuite1</stat>
-<stat pass="3" fail="0" skip="0" id="s1-s2" name="testSuite2">Probot.testSuite2</stat>
+<stat pass="11" fail="1" skip="0" id="s1" name="Unittest-Suites">Unittest-Suites</stat>
+<stat pass="8" fail="1" skip="0" id="s1-s1" name="testSuite1">Unittest-Suites.testSuite1</stat>
+<stat pass="3" fail="0" skip="0" id="s1-s2" name="testSuite2">Unittest-Suites.testSuite2</stat>
 </suite>
 </statistics>
 <errors>

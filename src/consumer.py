@@ -28,7 +28,14 @@ def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deli
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def start_consuming(channel, queue_name, timeout):
+def start_consuming(channel: pika.BlockingConnection.channel, queue_name: str, timeout: int) -> int:
+    """
+    Start consuming messages from the queue. Times out after receiving a first message.
+    :param channel:     Name of the channel
+    :param queue_name:  Name of the queue
+    :param timeout:     Inactivity timeout. Ensures the consumer stops when it receives nothing for a while.
+    :return:            The amount of time waited
+    """
     first_message_received: bool = False
     wait_time: int = 0
     for method_frame, properties, body in channel.consume(queue_name, auto_ack=False, inactivity_timeout=timeout):
@@ -62,7 +69,7 @@ def init() -> tuple:
 
         conf = "Docker"
         if test_suite_prefix.startswith("Kubernetes"):
-            test_suite_prefix: str = test_suite_prefix + str(f" {uuid.uuid4()}")
+            test_suite_prefix: str = f"{test_suite_prefix} {str(uuid.uuid4())}"
             conf = "Kubernetes"
 
     except KeyError:
@@ -70,7 +77,7 @@ def init() -> tuple:
         amqp_url: str = 'localhost'
         queue_name: str = 'probot_queue'
         connection_url: pika.ConnectionParameters = pika.ConnectionParameters(amqp_url)
-        test_suite_prefix: str = "LOCAL TEST"
+        test_suite_prefix: str = f"LOCAL TEST {str(uuid.uuid4())}"
         timeout: int = 5
         output_location: str = "logcombiner/test-output"
         conf = "Local PC"
@@ -87,7 +94,7 @@ def write_runtime_to_txt(output_location: str, test_suite_prefix: str, consumer_
     Write the runtime to a txt file.
     :param output_location:     Where to store the txt
     :param test_suite_prefix:   Name of the consumer
-    :param consumer_runtime:             Runtime.
+    :param consumer_runtime:    Runtime.
     :return:                    None
     """
     with open(PurePath(f"{output_location}/{test_suite_prefix}-runtime.txt"), "w") as f:

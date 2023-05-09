@@ -19,6 +19,7 @@ def combine_results(xml_location: str, output_location: str, start_and_end: tupl
     :param start_and_end:     Runtime of longest cluster
     :return:                    None
     """
+    start, end = start_and_end
     output_xmls = [PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
                    file.name.endswith(".xml")]
 
@@ -30,8 +31,8 @@ def combine_results(xml_location: str, output_location: str, start_and_end: tupl
           reporttitle="COMBINED REPORT",
           logtitle="COMBINED LOG",
           name="Combined Suites",
-          starttime=start_and_end[0],
-          endtime=start_and_end[1])
+          starttime=start,
+          endtime=end)
 
 
 def copy_output_directory(xml_location: str, output_location: str, directory: str) -> None:
