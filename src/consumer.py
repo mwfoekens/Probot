@@ -18,10 +18,11 @@ def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deli
     :param body:        message body
     :return:            None
     """
-    print(" [x] Received %r" % body.decode())
-    data: list = json.loads(body.decode())
+    decoded_body = body.decode()
+    print(" [x] Received %r" % decoded_body)
+    data: list = json.loads(decoded_body)
 
-    executor.prepare(data, OUTPUT_LOCATION, TEST_SUITE_PREFIX)
+    executor.prepare_and_execute(data, OUTPUT_LOCATION, TEST_SUITE_PREFIX)
     executor.COUNT += 1
 
     print(" [x] Done")
@@ -45,7 +46,6 @@ def start_consuming(channel: pika.BlockingConnection.channel, queue_name: str, t
             break
         elif body is None and first_message_received is False:
             wait_time += timeout
-            continue
         else:
             on_message(channel, method_frame, properties, body)
             first_message_received = True

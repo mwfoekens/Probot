@@ -6,7 +6,7 @@ from pathlib import PurePath
 COUNT = 0
 
 
-def prepare(data: list, output_path_location: str, test_suite_prefix: str) -> None:
+def prepare_and_execute(data: list, output_path_location: str, test_suite_prefix: str) -> None:
     """
     Method that prepares the data and generates test suites
     :param data:                    data that was received by receiver
