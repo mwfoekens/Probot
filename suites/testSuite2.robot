@@ -18,5 +18,7 @@ Test Case D 2.2.3
 
 *** Keywords ***
 Simple Keyword
+    [Tags]              Keyword Tag     Keyword Tag 2
+    [Documentation]     This keyword is pretty useless...
     Sleep   4
     Log    Hello World!

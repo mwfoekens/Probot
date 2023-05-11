@@ -97,5 +97,7 @@ Add New Todo "${todo}"
     Press Keys      input.new-todo      Enter
 
 Open ToDo App
+    [Tags]              Open ToDo App Tag
+    [Documentation]     This is documentation for a keyword
     New Browser     browser=chromium    headless=True
     New Page        https://todomvc.com/examples/react/#/
