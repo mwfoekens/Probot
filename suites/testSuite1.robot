@@ -13,6 +13,7 @@ Test Case D 1.1.1
 
 Test Case D 1.1.2
     [Tags]          GroupingTagB
+    [Documentation]     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     Open ToDo App
     Fill Text       input.new-todo      Have a nice day
     Press Keys      input.new-todo      Enter
@@ -57,6 +58,7 @@ Test Case NoTag/D 1.1
 
 Test Case NoTag/D 1.2
     [Tags]          My Tag
+    [Documentation]     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     Open ToDo App
     Add New Todo "Learn Python"
     Add New Todo "Learn Java"
