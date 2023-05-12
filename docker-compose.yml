@@ -36,7 +36,7 @@ services:
     container_name: consumer-2
     image: consumer:latest
     environment:
-      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=10&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
       EXECUTOR: 'Docker Executor 2'
       INACTIVITY: '10'
@@ -54,7 +54,7 @@ services:
     container_name: consumer-3
     image: consumer:latest
     environment:
-      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=5&retry_delay=5'
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=10&retry_delay=5'
       QUEUE_NAME: 'probot_queue'
       EXECUTOR: 'Docker Executor 3'
       INACTIVITY: '10'
