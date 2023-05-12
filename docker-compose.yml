@@ -70,7 +70,7 @@ services:
 
   log-combiner:
     container_name: log-combiner
-    image: probot-log-combiner:latest
+    image: log-combiner:latest
     build: src/logcombiner
     restart: no
     volumes:
