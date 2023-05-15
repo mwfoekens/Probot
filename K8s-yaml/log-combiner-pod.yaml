@@ -6,7 +6,7 @@ metadata:
   name: log-combiner
 spec:
   containers:
-    - image: probot-log-combiner:latest
+    - image: log-combiner:latest
       name: log-combiner
       imagePullPolicy: Never
       resources: { }
