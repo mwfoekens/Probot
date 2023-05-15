@@ -53,6 +53,10 @@ def start_consuming(channel: pika.BlockingConnection.channel, queue_name: str, t
     return wait_time
 
 
+def print_divider():
+    print("==============================================================================")
+
+
 def init() -> tuple:
     """
     Initialise some variables when starting. Is different based on if run on Docker Compose, K8s or local.
@@ -82,9 +86,9 @@ def init() -> tuple:
         output_location: str = "logcombiner/test-output"
         conf = "Local PC"
 
-    print("==============================================================================")
+    print_divider()
     print(f"Running on {conf}\nURL:\t\t{amqp_url}\nQueue name:\t{queue_name}\nExecutor:\t{test_suite_prefix}")
-    print("==============================================================================")
+    print_divider()
 
     return queue_name, connection_url, test_suite_prefix, output_location, timeout
 
@@ -138,7 +142,7 @@ if __name__ == '__main__':
 
     write_runtime_to_txt(OUTPUT_LOCATION, TEST_SUITE_PREFIX, runtime)
 
-    print("==============================================================================")
+    print_divider()
     print(f"Consumer {TEST_SUITE_PREFIX} ran for {runtime} seconds.\n"
           f"Saved in {OUTPUT_LOCATION}/{TEST_SUITE_PREFIX}-runtime.txt")
-    print("==============================================================================")
+    print_divider()

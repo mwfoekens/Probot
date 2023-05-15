@@ -111,6 +111,10 @@ def get_start_and_end_times(runtime: float) -> tuple:
     return start.strftime("%Y%m%d %H:%M:%S.%f"), end.strftime("%Y%m%d %H:%M:%S.%f")
 
 
+def print_divider():
+    print("==============================================================================")
+
+
 if __name__ == '__main__':
 
     if any(os.scandir(PurePath(XML_LOCATION))):
@@ -118,9 +122,11 @@ if __name__ == '__main__':
         longest_runtime_name, longest_runtime = get_longest_running_cluster(XML_LOCATION)
         print(f"Longest running executor was {longest_runtime_name} with {longest_runtime} seconds")
         combine_results(XML_LOCATION, OUTPUT_LOCATION, get_start_and_end_times(longest_runtime))
+        print_divider()
 
     else:
         print("No log files found.")
+        print_divider()
         sys.exit(1)
 
     # Only copy the browser folder/playwright log if there's actually a log file created.
@@ -131,4 +137,5 @@ if __name__ == '__main__':
         sys.exit(0)
 
     print("Not ready.")
+    print_divider()
     sys.exit(1)
