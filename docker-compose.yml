@@ -12,11 +12,16 @@ services:
     volumes:
       - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
 
+  rfbrowser-image-builder:
+    image: rfbrowser:latest
+    build:
+      dockerfile: Dockerfile-rfbrowser
+
   probot-consumer:
     container_name: consumer
     image: consumer:latest
     build:
-      dockerfile: src/Dockerfile
+      dockerfile: Dockerfile-core
     environment:
       AMQP_URL: 'amqp://guest:guest@rabbitmq:5672?connection_attempts=10&retry_delay=5'
       QUEUE_NAME: 'probot_queue'

@@ -1,0 +1,10 @@
+FROM rfbrowser:latest
+ENV PYTHONUNBUFFERED=1
+
+# Install requirements
+COPY requirements.txt .
+RUN python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt
+
+COPY src/consumer.py .
+COPY src/executor.py .
+CMD ["python3", "consumer.py"]

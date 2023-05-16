@@ -95,6 +95,10 @@ def get_longest_running_cluster(xml_location: str) -> tuple:
         with open(file, "r") as f:
             times[file.name] = float(f.readline())
 
+    if len(times) == 0:
+        print("Not ready.")
+        sys.exit(1)
+
     times = sorted(times.items(), key=lambda x: x[1], reverse=True)
 
     return times[0][0].split("-")[0], times[0][1]

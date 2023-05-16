@@ -38,21 +38,6 @@ spec:
               name: test-outputs
             - mountPath: /test-suites
               name: test-suites
-      initContainers:
-        - name: init-requirements
-          image: consumer:k8s
-          command: [ "/bin/sh", "-c" ]
-          args:
-            - python3 -m pip install --upgrade pip;
-              curl https://raw.githubusercontent.com/mwfoekens/Probot/main/requirements.txt -O;
-              python3 -m pip install -r requirements.txt;
-        - name: init-browser
-          image: consumer:k8s
-          command: [ "/bin/sh", "-c" ]
-          args:
-            - curl https://raw.githubusercontent.com/mwfoekens/Probot/main/script.sh -O;
-              chmod +x ./script.sh;
-              ./script.sh;
       restartPolicy: Always
       volumes:
         - name: test-outputs

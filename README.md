@@ -7,7 +7,8 @@
 1. [Run Locally](#run-example-locally)
 2. [Run with Docker Compose](#run-example-with-docker-compose)
 3. [Run with Kubernetes](#run-example-with-kubernetes)
-4. [Serving output with NGINX](#serving-output-files-with-nginx)
+4. [Run Probot without Robot Framework Browser library](#run-probot-without-robot-framework-browser-library)
+5. [Serving output with NGINX](#serving-output-files-with-nginx)
     1. [Docker Compose](#docker-compose)
     2. [Kubernetes](#kubernetes)
 
@@ -45,34 +46,43 @@ pip install -r requirements.txt
 
 * Run ```docker-compose.yml``` to start RabbitMQ and consumers.
 * Run main.py with arguments.
-* When all messages have been consumed, start the ```log combiner``` container.
+* When all messages have been consumed, start the ```log-combiner``` container.
     * The log combiner will output in your local directory (standard set to folder ```docker-output```).
 
 ## Run example with Kubernetes
 
 #### ! When running Kubernetes, make sure to [turn on Kubernetes in Docker Desktop](https://docs.docker.com/desktop/kubernetes/)  !
 
-- Ensure that ```log-combiner-pod.yaml```, ```rabbitmq-deployment.yaml``` and ```probot-consumer-deployment.yaml``` in
+* Build ```log-combiner```, ```rfbrowser``` and ```consumer``` images. This can be done easily through the Docker
+  Compose file.
+* Ensure that ```log-combiner-pod.yaml```, ```rabbitmq-deployment.yaml``` and ```probot-consumer-deployment.yaml``` in
   the ```k8s-yaml``` folder have the correct mount paths.
-
-* Choose between:
-    1. Use ```consumer:latest``` image created by ```docker-compose.yml```. This image is a lot larger
-       than the image created by ```Dockerfile-small```, but requires no initial setup.
-        1. Remove the ```initContainers``` block in the ```probot-consumer-deployment.yaml```
-    2. Build the consumer image with the ```Dockerfile-small``` in the ```src``` folder. (Suggested
-       name: ```consumer:k8s```)
-        1. This image is a lot smaller than ```consumer:latest```, but Kubernetes will do additional setup with [Init
-           Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/).
-
-
-- In the ```K8s-yaml``` folder, run:
-    - ```kubectl apply -f .```
+* In the ```K8s-yaml``` folder, run:
+    * ```kubectl apply -f .```
 
 * To connect to RabbitMQ's AMPQ locally, use port ```32000```
     * To connect to the RabbitMQ management site use port ```31000```
     * These ports can be changed in ```rabbitmq-service.yaml```
 * Pass the ```32000``` port with your main function so you can send clusters to the queue.
 * Kubernetes will eventually combine all logs and store the output in folder ```k8s-output```.
+
+### Run Probot without Robot Framework Browser library
+
+If you don't want to use Robot Framework Browser library in your tests, it is easily removable by
+changing ```Dockerfile-core``` and changing
+
+```dockerfile
+FROM rfbrowser:latest
+```
+
+to
+
+```dockerfile
+FROM python:latest
+```
+
+This will import the basic functionality of Robot Framework only, and reduce ```consumer``` image size. When running
+this example in Docker Compose, the ```rfbrowser-image-builder``` service block may be removed.
 
 ## Serving output files with NGINX
 
