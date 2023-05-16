@@ -35,21 +35,22 @@ pip install -r requirements.txt
 
 ## Run example locally
 
-* Start a RabbitMQ container (a RabbitMQ Docker container saves work and effort).
-* Run as many ```consumer.py``` instances as desired.
+* Start a [RabbitMQ container](https://www.rabbitmq.com/download.html) (a RabbitMQ Docker container saves work and
+  effort).
 * Start the ```main.py``` with arguments (run ```main.py --help``` for help).
+* Run as many ```consumer.py``` instances as desired.
+* When all messages are consumed, start ```log_combiner.py``` and find the logs in folder ```logcombiner/output```
 
 ## Run example with Docker Compose
 
-* Start the RabbitMQ container.
+* Run ```docker-compose.yml``` to start RabbitMQ and consumers.
 * Run main.py with arguments.
-* Run ```docker-compose.yml``` to start the consumers.
 * When all messages have been consumed, start the ```log combiner``` container.
-    * The log combiner will output in your local directory.
+    * The log combiner will output in your local directory (standard set to folder ```docker-output```).
 
 ## Run example with Kubernetes
 
-#### ! When running Kubernetes, make sure to turn on Kubernetes in Docker Desktop !
+#### ! When running Kubernetes, make sure to [turn on Kubernetes in Docker Desktop](https://docs.docker.com/desktop/kubernetes/)  !
 
 - Ensure that ```log-combiner-pod.yaml```, ```rabbitmq-deployment.yaml``` and ```probot-consumer-deployment.yaml``` in
   the ```k8s-yaml``` folder have the correct mount paths.
@@ -71,6 +72,7 @@ pip install -r requirements.txt
     * To connect to the RabbitMQ management site use port ```31000```
     * These ports can be changed in ```rabbitmq-service.yaml```
 * Pass the ```32000``` port with your main function so you can send clusters to the queue.
+* Kubernetes will eventually combine all logs and store the output in folder ```k8s-output```.
 
 ## Serving output files with NGINX
 
