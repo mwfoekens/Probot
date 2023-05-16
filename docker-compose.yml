@@ -13,6 +13,7 @@ services:
       - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
 
   rfbrowser-image-builder:
+    container_name: rfbrowser-image-builder
     image: rfbrowser:latest
     build:
       dockerfile: Dockerfile-rfbrowser
@@ -29,6 +30,7 @@ services:
       INACTIVITY: '10'
     depends_on:
       - rabbitmq
+      - rfbrowser-image-builder
     ports:
       - "52325:52325"
     networks:
