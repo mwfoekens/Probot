@@ -82,7 +82,8 @@ FROM python:latest
 ```
 
 This will import the basic functionality of Robot Framework only, and reduce ```consumer``` image size. When running
-this example in Docker Compose, the ```rfbrowser-image-builder``` service block may be removed.
+this example in Docker Compose, the ```rfbrowser-image-builder``` service block may be removed, should be removed from
+the consumer service block`: ```depends-on```.
 
 ## Serving output files with NGINX
 

@@ -5,7 +5,7 @@ metadata:
     io.kompose.service: probot-consumer
   name: probot-consumer
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       io.kompose.service: probot-consumer
