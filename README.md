@@ -83,7 +83,7 @@ FROM python:latest
 
 This will import the basic functionality of Robot Framework only, and reduce ```consumer``` image size. When running
 this example in Docker Compose, the ```rfbrowser-image-builder``` service block may be removed, should be removed from
-the consumer service block`: ```depends-on```.
+the consumer service block: ```depends-on```.
 
 ## Serving output files with NGINX
 
@@ -142,7 +142,7 @@ The most important part is the ```autoindex on;``` line, which will generate a h
 
 Add the same default.conf file as shown in the [Docker Compose](#docker-compose) section. Mount the default.conf to your
 deployment, and make sure that ```log-combiner-pod.yaml``` outputs in
-your ```output-location```  persistent volume claim.
+your ```output-location```  persistent volume claim. Combined logs are served on port ```30000```.
 
 Create an ```nginx-service.yaml```:
 
@@ -154,6 +154,7 @@ metadata:
     io.kompose.service: nginx
   name: nginx
 spec:
+  type: NodePort
   ports:
     - name: "8080"
       port: 8080
@@ -194,9 +195,9 @@ spec:
             - containerPort: 80
           resources: { }
           volumeMounts:
-            - mountPath: /output-location
+            - mountPath: /usr/share/nginx/html:ro
               name: output-location
-            - mountPath: /default.conf
+            - mountPath: /etc/nginx/conf.d/default.conf
               name: nginx-configuration-file
       restartPolicy: Always
       volumes:
