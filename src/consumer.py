@@ -42,10 +42,11 @@ def start_consuming(channel: pika.BlockingConnection.channel, queue_name: str, t
     for method_frame, properties, body in channel.consume(queue_name, auto_ack=False, inactivity_timeout=timeout):
         # If no first message was received, the consumer waits until a first message was received. Only when a
         # single message has been received then the consumer is allowed to stop.
-        if body is None and first_message_received is True:
-            break
-        elif body is None and first_message_received is False:
-            wait_time += timeout
+        if body is None:
+            if first_message_received:
+                break
+            else:
+                wait_time += timeout
         else:
             on_message(channel, method_frame, properties, body)
             first_message_received = True
