@@ -101,7 +101,7 @@ def get_longest_running_cluster(xml_location: str) -> tuple:
 
     times = sorted(times.items(), key=lambda x: x[1], reverse=True)
 
-    return times[0][0].split("-")[0], times[0][1]
+    return times[0][0][:-len("-runtime.txt")], times[0][1]
 
 
 def get_start_and_end_times(runtime: float) -> tuple:
