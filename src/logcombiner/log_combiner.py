@@ -101,6 +101,8 @@ def get_longest_running_cluster(xml_location: str) -> tuple:
 
     times = sorted(times.items(), key=lambda x: x[1], reverse=True)
 
+    # removing the -runtime.txt from the filename by grabbing the length of it, then stopping at the -len position.
+    # It's a Python thing for some reason.
     return times[0][0][:-len("-runtime.txt")], times[0][1]
 
 
@@ -115,7 +117,11 @@ def get_start_and_end_times(runtime: float) -> tuple:
     return start.strftime("%Y%m%d %H:%M:%S.%f"), end.strftime("%Y%m%d %H:%M:%S.%f")
 
 
-def print_divider():
+def print_divider() -> None:
+    """
+    Print a dividing line in the output terminal for readability
+    :return: None
+    """
     print("==============================================================================")
 
 
