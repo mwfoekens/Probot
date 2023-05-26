@@ -1,7 +1,6 @@
 FROM rfbrowser:latest
 ENV PYTHONUNBUFFERED=1
 
-# Install requirements
 RUN python3 -m pip install --upgrade pip && python3 -m pip install robotframework pika
 
 COPY src/consumer.py .
