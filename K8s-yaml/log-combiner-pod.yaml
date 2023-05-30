@@ -11,17 +11,26 @@ spec:
       imagePullPolicy: Never
       resources: { }
       volumeMounts:
+        # Serve output
         - mountPath: /test-output
           name: test-outputs
+        # Put locally
+        #        - mountPath: /output
+        #          name: output-mount
         - mountPath: /output
-          name: output-mount
+          name: output-location
   restartPolicy: OnFailure
   volumes:
     - name: test-outputs
       persistentVolumeClaim:
         claimName: test-outputs
-    - name: output-mount
-      hostPath:
-        path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/k8s-output
-        type: Directory
+    # Put locally
+    #    - name: output-mount
+    #      hostPath:
+    #        path: /run/desktop/mnt/host/c/users/merel.foekens/pycharmprojects/probot/k8s-output
+    #        type: Directory
+    # Serve output
+    - name: output-location
+      persistentVolumeClaim:
+        claimName: output-location
 status: { }
