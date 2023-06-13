@@ -8,13 +8,16 @@
 2. [Run with Docker Compose](#run-example-with-docker-compose)
 3. [Run with Kubernetes](#run-example-with-kubernetes)
 4. [Run Probot without Robot Framework Browser library](#run-probot-without-robot-framework-browser-library)
-5. [Serving output with NGINX](#serving-output-files-with-nginx)
+5. [Run Probot with Robot Framework Selenium library](#run-probot-with-robot-framework-selenium-library)
+6. [Serving output with NGINX](#serving-output-files-with-nginx)
     1. [Docker Compose](#docker-compose)
     2. [Kubernetes](#kubernetes)
 
 This project is a graduation project, and mostly a proof of concept. This project requires a lot more time before being
 fully functional for all Robot Framework users. This project can run on Kubernetes & Docker, Docker Compose & Locally.
-As of right now, [Robot Framework Browser](https://robotframework-browser.org/) tests can run in this example.
+As of right now, [Robot Framework Browser](https://robotframework-browser.org/) tests
+and [Robot Framework Selenium with Firefox browser](https://github.com/robotframework/SeleniumLibrary) tests can run in
+this example.
 
 Probot allows for highly configurable test splitting and running tests in parallel with Docker and Kubernetes. Passing a
 dependency.json (see example in ```src``` folder) as an argument in ```main.py```, allows to group together individual
@@ -84,6 +87,17 @@ FROM python:latest
 This will import the basic functionality of Robot Framework only, and reduce ```consumer``` image size. When running
 this example in Docker Compose, the ```rfbrowser-image-builder``` service block may be removed, should be removed from
 the consumer service block: ```depends-on```.
+
+### Run Probot with Robot Framework Selenium library
+
+If you wish to run with Robot Framework Selenium, import the Docker image in ```Dockerfile-core```.
+
+```dockerfile
+FROM rfselenium:latest
+```
+
+Add the ```rfselenium-image-builder``` service block and make sure that the consumer depends on this service.
+Uncomment the ```seleniumsuite.robot``` file and comment out ```testSuite1.robot``` and ```testSuite2.robot```.
 
 ## Serving output files with NGINX
 

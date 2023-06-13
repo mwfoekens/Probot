@@ -1,0 +1,10 @@
+FROM python:latest
+
+RUN apt update
+
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/f/firefox/firefox_75.0+build3-0ubuntu1_amd64.deb
+RUN apt install --fix-missing ./firefox_75.0+build3-0ubuntu1_amd64.deb -y
+
+RUN apt-get update --fix-missing && apt-get install -y libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 --fix-missing
+
+RUN python3 -m pip install --upgrade pip && pip install selenium==4.9.1 robotframework-seleniumlibrary

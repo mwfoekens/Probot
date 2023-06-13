@@ -18,6 +18,12 @@ services:
     build:
       dockerfile: Dockerfile-rfbrowser
 
+  #  rfselenium-image-builder:
+  #    container_name: rfselenium-image-builder
+  #    image: rfselenium:latest
+  #    build:
+  #      dockerfile: Dockerfile-rfselenium
+
   probot-consumer:
     container_name: consumer
     image: consumer:latest
@@ -31,6 +37,7 @@ services:
     depends_on:
       - rabbitmq
       - rfbrowser-image-builder
+    #      - rfselenium-image-builder
     ports:
       - "52325:52325"
     networks:
