@@ -1,7 +1,7 @@
 FROM rfbrowser:latest
 ENV PYTHONUNBUFFERED=1
 
-RUN python3 -m pip install --upgrade pip && python3 -m pip install robotframework pika
+RUN python3 -m pip install --upgrade pip --break-system-packages && python3 -m pip install robotframework pika --break-system-packages
 
 COPY src/consumer.py .
 COPY src/executor.py .

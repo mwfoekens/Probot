@@ -43,8 +43,8 @@ services:
     networks:
       - rabbit-network
     volumes:
-      - test-outputs:/test-output
-      - ./suites/:/test-suites/
+      - test-outputs:/usr/app/test-output
+      - ./suites/:/usr/app/test-suites/
 
   probot-consumer2:
     container_name: consumer-2
@@ -61,8 +61,8 @@ services:
     networks:
       - rabbit-network
     volumes:
-      - test-outputs:/test-output
-      - ./suites/:/test-suites/
+      - test-outputs:/usr/app/test-output
+      - ./suites/:/usr/app/test-suites/
 
   probot-consumer3:
     container_name: consumer-3
@@ -79,8 +79,8 @@ services:
     networks:
       - rabbit-network
     volumes:
-      - test-outputs:/test-output
-      - ./suites/:/test-suites/
+      - test-outputs:/usr/app/test-output
+      - ./suites/:/usr/app/test-suites/
 
   log-combiner:
     container_name: log-combiner
