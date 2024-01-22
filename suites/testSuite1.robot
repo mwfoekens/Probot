@@ -6,9 +6,9 @@ Library     ${CURDIR}/my_robot_func.py
 Test Case D 1.1.1
     [Tags]          My Tag
     New Browser     browser=chromium    headless=True
-    New Page        https://todomvc.com/examples/react/#/
+    New Page        https://todomvc.com/examples/react/dist/
     Add New Todo "Hello"
-    Add New Todo "CGI!"
+    Add New Todo "RoboCon!"
     Take Screenshot
 
 Test Case D 1.1.2
@@ -29,7 +29,7 @@ Test Case D 1.2.2
     [Tags]          GroupingTagA
     Open ToDo App
     Add New Todo "This one will fail"
-    Get Text        span.todo-count    ==    3 items left
+    Get Text        span.todo-count    ==    3 items left!
     Log             This one is meant to fail
 
 Test Case GroupTagA 1.1
@@ -40,7 +40,7 @@ Test Case GroupTagA 1.1
 Test Case GroupTagA 1.2
     [Tags]          Another Tag     Very Nice Tag        GroupingTagA
     Open ToDo App
-    Fill Text       input.new-todo      Hello world!
+    Fill Text       input.new-todo      Have a good time at RoboCon!
     Press Keys      input.new-todo      Enter
     Take Screenshot
     Sleep           5
@@ -61,10 +61,10 @@ Test Case NoTag/D 1.2
     [Documentation]     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     Open ToDo App
     Add New Todo "Learn Python"
-    Add New Todo "Learn Java"
     Add New Todo "Learn C#"
+    Add New Todo "Learn Robot Framework"
     Take Screenshot
-    Get Text        span.todo-count    ==    3 items left
+    Get Text        span.todo-count    ==    3 items left!
     Sleep           10
     Log             Hello World!
 
@@ -79,8 +79,8 @@ Test Case Not In Output XML 1
 Test Case Not In Output XML 2
     [Tags]          Another Tag
     Open ToDo App
-    Add New Todo "Test To Do"
-    Add New Todo "Test To Do 2"
+    Add New Todo "Present at RoboCon"
+    Add New Todo "Have a good time"
     Take Screenshot
     Sleep           5
     Log             Hello World!
@@ -88,7 +88,7 @@ Test Case Not In Output XML 2
 Test Case Not In Output XML 3
     [Tags]          Very Nice Tag
     Open ToDo App
-    Add New Todo "HELLO WORLD"
+    Add New Todo "Present at RoboCon"
     Take Screenshot
 
 *** Keywords ***
@@ -100,4 +100,4 @@ Open ToDo App
     [Tags]              Open ToDo App Tag
     [Documentation]     This is documentation for a keyword
     New Browser     browser=chromium    headless=True
-    New Page        https://todomvc.com/examples/react/#/
+    New Page        https://todomvc.com/examples/react/dist/

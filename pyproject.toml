@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "probot"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+robotframework = "^6.1.1"
+click = "^8.1.7"
+pika = "^1.3.2"
+robotframework-browser = "^18.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

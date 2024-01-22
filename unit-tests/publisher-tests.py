@@ -10,8 +10,8 @@ class PublisherTests(unittest.TestCase):
         """
         res = splitter.main(dependency_file="unittest-dependency.json",
                             output="unittest-log\\output.xml",
-                            time_cluster_size=2,
-                            random_cluster_size=1,
+                            time_group_size=2,
+                            random_group_size=1,
                             suites_location="unittest-suites")
         count = 0
         for i in range(len(res)):
@@ -23,13 +23,13 @@ class PublisherTests(unittest.TestCase):
         From the list passed as an argument, it should only have 3 clusters left
         :return:
         """
-        clusters = splitter.remove_empty_clusters([["test 1"], [], ['test 2'], [], [], ['test 3'], [], []])
+        clusters = splitter.remove_empty_groups([["test 1"], [], ['test 2'], [], [], ['test 3'], [], []])
         self.assertEqual(len(clusters), 3)
 
     def test_greedy_sort(self):
         nums = {"A": 12, "B": 1, "C": 21, "D": 7, "E": 25, "F": 2, "G": 9, "H": 24, "I": 4, "J": 5}
-        name_c = splitter.generate_clusters(4)
-        time_c = splitter.generate_clusters(4)
+        name_c = splitter.generate_groups(4)
+        time_c = splitter.generate_groups(4)
         splitter.greedy_sort(nums, name_c, time_c)
         sums = [sum(tc) for tc in time_c]
         # print(name_c)

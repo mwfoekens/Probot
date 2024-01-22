@@ -7,97 +7,97 @@ import json
 import click
 
 
-def main(dependency_file: str, output: str, time_cluster_size: int, random_cluster_size: int, suites_location) -> list:
+def main(dependency_file: str, output: str, time_group_size: int, random_group_size: int, suites_location) -> list:
     """
-    Splits test suite into multiple clusters
+    Splits test suite into multiple groups
 
     :param dependency_file:     The file containing dependencies
     :param output:              xml file containing runtimes of the previous run
-    :param time_cluster_size:   Amount of clusters for clusters split on time
-    :param random_cluster_size: Amount of clusters for clusters that are randomly assigned
+    :param time_group_size:   Amount of groups for groups split on time
+    :param random_group_size: Amount of groups for groups that are randomly assigned
     :param suites_location:     Location of the suites
-    :return:                    Clusters
+    :return:                    Groups
     """
-    clusters: list = []
-    modulo_cluster: list = []
+    groups: list = []
+    modulo_group: list = []
     result: ExecutionResult = retrieve_dry_run_results(suites_location)
 
-    # If there is a dependency.json, read it and generate cluster groups for it
+    # If there is a dependency.json, read it and generate groups for it
     if dependency_file is not None:
         with open(dependency_file, "r") as json_file:
             file: dict = json.load(json_file)
-        dependency_cluster: list = generate_clusters(file["dependencies"])
-        tags_cluster: list = generate_clusters(file["tags"])
+        dependency_group: list = generate_groups(file["dependencies"])
+        tags_group: list = generate_groups(file["tags"])
     else:
         click.secho("No dependency.json passed.", fg='bright_red', bg='white')
 
-    # Always append a test to the leftover cluster group, it gets removed when it fits into a dependency group
+    # Always append a test to the leftover group, it gets removed when it fits into a dependency group
     for suite in result.suite.suites:
         for test in suite.tests:
-            modulo_cluster.append(test.name)
+            modulo_group.append(test.name)
 
             if dependency_file is not None:
-                dependency_sort(dependency_cluster, file, modulo_cluster, tags_cluster, test)
+                dependency_sort(dependency_group, file, modulo_group, tags_group, test)
 
-    # Add the dependency cluster and tag cluster to all clusters
+    # Add the dependency group and tag group to all groups
     if dependency_file is not None:
-        add_cluster_group_to_all_clusters(clusters, dependency_cluster)
-        add_cluster_group_to_all_clusters(clusters, tags_cluster)
+        add_group_to_all_groups(groups, dependency_group)
+        add_group_to_all_groups(groups, tags_group)
 
     # if there is an output.xml, retrieve the times and sort based on execution time.
     if output is not None:
-        add_cluster_group_to_all_clusters(clusters, outputxml_sort(modulo_cluster, output, time_cluster_size))
+        add_group_to_all_groups(groups, outputxml_sort(modulo_group, output, time_group_size))
     else:
         click.secho("No output.xml passed", fg='bright_red', bg='white')
 
     # If we have tests left, assign randomly, because there's no data about the tests.
-    if len(modulo_cluster) != 0:
-        add_cluster_group_to_all_clusters(clusters, random_sort(modulo_cluster, random_cluster_size))
+    if len(modulo_group) != 0:
+        add_group_to_all_groups(groups, random_sort(modulo_group, random_group_size))
 
-    return remove_empty_clusters(clusters)
+    return remove_empty_groups(groups)
 
 
-def random_sort(modulo_cluster: list, random_cluster_size: int) -> list:
+def random_sort(modulo_group: list, random_group_size: int) -> list:
     """
     Function that randomly assigns test cases that are not in dependency, and do not exist in the output.xml
-    :param modulo_cluster:          Cluster where the leftover test cases are stored
-    :param random_cluster_size:     Amount of clusters for randomly assigned test cases.
-    :return:                        Clusters
+    :param modulo_group:          Group where the leftover test cases are stored
+    :param random_group_size:     Amount of groups for randomly assigned test cases.
+    :return:                        Groups
     """
-    random_clusters: list = generate_clusters(random_cluster_size)
+    random_groups: list = generate_groups(random_group_size)
 
-    for test in modulo_cluster:
-        choice(random_clusters).append(test)
-    return random_clusters
+    for test in modulo_group:
+        choice(random_groups).append(test)
+    return random_groups
 
 
-def outputxml_sort(modulo_cluster: list, output: str, time_cluster_size: int) -> list:
+def outputxml_sort(modulo_group: list, output: str, time_group_size: int) -> list:
     """
     Sort based on execution times
-    :param modulo_cluster:      Cluster where the leftover test cases are stored
+    :param modulo_group:      Group where the leftover test cases are stored
     :param output:              Output.xml file
-    :param time_cluster_size:   Size for the timed clusters
-    :return:                    Clusters
+    :param time_group_size:   Size for the timed Groups
+    :return:                    Groups
     """
     execution_times: dict = dict()
-    timed_clusters: list = generate_clusters(time_cluster_size)
-    time_clusters_names: list = generate_clusters(time_cluster_size)
+    timed_groups: list = generate_groups(time_group_size)
+    time_groups_names: list = generate_groups(time_group_size)
 
     data: ExecutionResult = extract_xml(output)
 
-    gather_tests(data, execution_times, modulo_cluster)
+    gather_tests(data, execution_times, modulo_group)
 
-    greedy_sort(execution_times, time_clusters_names, timed_clusters)
+    greedy_sort(execution_times, time_groups_names, timed_groups)
 
-    return time_clusters_names
+    return time_groups_names
 
 
-def gather_tests(data: ExecutionResult, execution_times: dict, modulo_cluster: list) -> None:
+def gather_tests(data: ExecutionResult, execution_times: dict, modulo_group: list) -> None:
     """
-    Gather tests and remove them from the modulo cluster
+    Gather tests and remove them from the modulo group
     :param data:                Test suite data from output.xml
     :param execution_times:     Dictionary where test names and their execution times are stored
-    :param modulo_cluster:      Cluster containing the tests that aren't assigned yet
+    :param modulo_group:      Group containing the tests that aren't assigned yet
     :return:                    None
     """
     loop_location = find_test_suites(data)
@@ -105,8 +105,8 @@ def gather_tests(data: ExecutionResult, execution_times: dict, modulo_cluster: l
     for suite in loop_location:
         for test in suite.tests:
 
-            if test.name in modulo_cluster:
-                add_to_cluster_and_remove_from_modulo_cluster(execution_times, None, modulo_cluster, test)
+            if test.name in modulo_group:
+                add_to_group_and_remove_from_modulo_group(execution_times, None, modulo_group, test)
 
 
 def find_test_suites(data: ExecutionResult) -> TestSuites:
@@ -123,28 +123,28 @@ def find_test_suites(data: ExecutionResult) -> TestSuites:
     return loop_location
 
 
-def greedy_sort(execution_times: dict, time_clusters_names: list, timed_clusters: list) -> None:
+def greedy_sort(execution_times: dict, time_groups_names: list, timed_groups: list) -> None:
     """
-    Assigns tests to clusters in descending order.
+    Assigns tests to groups in descending order.
     :param execution_times:         Dictionary where test names and their execution times are stored
-    :param time_clusters_names:     Names of the tests only
-    :param timed_clusters:          Times of the tests only
+    :param time_groups_names:     Names of the tests only
+    :param timed_groups:          Times of the tests only
     :return:                        None
     """
     for test, time in dict(sorted(execution_times.items(), key=lambda x: x[1], reverse=True)).items():
-        sum_per_cluster: list = [sum(timed_clusters) for timed_clusters in timed_clusters]
-        index: int = sum_per_cluster.index(min(sum_per_cluster))
-        timed_clusters[index].append(time)
-        time_clusters_names[index].append(test)
+        sum_per_group: list = [sum(timed_groups) for timed_groups in timed_groups]
+        index: int = sum_per_group.index(min(sum_per_group))
+        timed_groups[index].append(time)
+        time_groups_names[index].append(test)
 
 
-def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, tags_cluster: list, test) -> None:
+def dependency_sort(dependency_group: list, file: dict, modulo_group: list, tags_group: list, test) -> None:
     """
-    Sort into clusters based on dependencies
-    :param dependency_cluster:  Cluster containing test cases with direct dependencies
+    Sort into groups based on dependencies
+    :param dependency_group:  Group containing test cases with direct dependencies
     :param file:                File where dependencies are stored
-    :param modulo_cluster:      Cluster where leftover test cases are stored
-    :param tags_cluster:        Cluster where test cases with a tag mentioned in the dependency file are stored
+    :param modulo_group:      Group where leftover test cases are stored
+    :param tags_group:        Group where test cases with a tag mentioned in the dependency file are stored
     :param test:                The individual test to be sorted
     :return:                    None
     """
@@ -154,62 +154,62 @@ def dependency_sort(dependency_cluster: list, file: dict, modulo_cluster: list, 
     for dependency_index in range(len(file["dependencies"])):
 
         if test.name in file["dependencies"][dependency_index]:
-            add_to_cluster_and_remove_from_modulo_cluster(dependency_cluster, dependency_index, modulo_cluster, test)
+            add_to_group_and_remove_from_modulo_group(dependency_group, dependency_index, modulo_group, test)
             found_in_dependency = True
 
     for tags_index in range(len(file["tags"])):
 
         if file["tags"][tags_index] in test.tags and found_in_dependency is False and found_in_tags is False:
-            add_to_cluster_and_remove_from_modulo_cluster(tags_cluster, tags_index, modulo_cluster, test)
+            add_to_group_and_remove_from_modulo_group(tags_group, tags_index, modulo_group, test)
             found_in_tags = True
 
 
-def add_to_cluster_and_remove_from_modulo_cluster(cluster_group: list or dict, test_index: int or None,
-                                                  modulo_cluster: list, test: robot.result.TestCase) -> None:
+def add_to_group_and_remove_from_modulo_group(group: list or dict, test_index: int or None,
+                                              modulo_group: list, test: robot.result.TestCase) -> None:
     """
-    Add test to a new cluster group, and remove from the modulo cluster
-    :param cluster_group:   Cluster group to be added to
-    :param test_index:      Index of the cluster to be added to
-    :param modulo_cluster:  Leftover test case group.
+    Add test to a new group group, and remove from the modulo group
+    :param group:   group to be added to
+    :param test_index:      Index of the group to be added to
+    :param modulo_group:  Leftover test case group.
     :param test:            Test in question.
     :return:                None
     """
-    if type(cluster_group) is dict:
-        cluster_group[test.name] = (test.elapsedtime / 1000)
+    if type(group) is dict:
+        group[test.name] = (test.elapsedtime / 1000)
     else:
-        cluster_group[test_index].append(test.name)
-    modulo_cluster.remove(test.name)
+        group[test_index].append(test.name)
+    modulo_group.remove(test.name)
 
 
-def remove_empty_clusters(clusters: list) -> list:
+def remove_empty_groups(groups: list) -> list:
     """
-    Removes leftover clusters
-    :param clusters:    Cluster group containing all clusters
-    :return:            Clusters without empty clusters
+    Removes leftover groups
+    :param groups:     group containing all groups
+    :return:            groups without empty groups
     """
-    return [cluster for cluster in clusters if len(cluster) != 0]
+    return [group for group in groups if len(group) != 0]
 
 
-def generate_clusters(cluster_size: int or list) -> list:
+def generate_groups(group_size: int or list) -> list:
     """
-    Generate cluster groups within a cluster
-    :param cluster_size:    The size of the group
-    :return:                A cluster group with :var: cluster_size amount of clusters
+    Generate groups within a group
+    :param group_size:    The size of the group
+    :return:                A group with :var: group_size amount of groups
     """
-    if type(cluster_size) is int:
-        return [[] for _ in range(cluster_size)]
+    if type(group_size) is int:
+        return [[] for _ in range(group_size)]
     else:
-        return [[] for _ in cluster_size]
+        return [[] for _ in group_size]
 
 
-def add_cluster_group_to_all_clusters(clusters: list, cluster_group: list) -> None:
+def add_group_to_all_groups(groups: list, group: list) -> None:
     """
-    Add a cluster group to the overarching cluster group
-    :param clusters:        Overarching cluster group
-    :param cluster_group:   Group to be added to :var: clusters
-    :return:                :var: clusters
+    Add a group to the overarching group
+    :param groups:        Overarching group
+    :param group:   Group to be added to :var: groups
+    :return:                :var: groups
     """
-    clusters.extend(cluster_group)
+    groups.extend(group)
 
 
 def retrieve_dry_run_results(suites_location: str) -> ExecutionResult:
