@@ -5,9 +5,8 @@ from pika.exceptions import AMQPConnectionError
 import splitter
 import sender
 import click
-import json
 
-VERSION = "0.9"
+VERSION = "0.9.1"
 
 
 @click.command()
@@ -24,7 +23,7 @@ def main(dependency: str, output_xml: str, timed_group_size: int, random_group_s
          port: int, suites_location: str) -> None:
     """
     \b
-    Split and send clusters
+    Split and send groups
     :param dependency:          dependency.json
     :param output_xml:          output.xml with execution times
     :param timed_group_size:    maximum size of the timed groups
@@ -43,27 +42,20 @@ def main(dependency: str, output_xml: str, timed_group_size: int, random_group_s
     # print(host)
     # print(port)
     # print(suites_location)
-    clusters = splitter.main(dependency, output_xml, timed_group_size, random_group_size, suites_location)
+    groups = splitter.main(dependency, output_xml, timed_group_size, random_group_size, suites_location)
     click.secho("Probot generated these groups:", fg='cyan')
     count = 0
-    for cluster in clusters:
-        click.echo(cluster)
+    for group in groups:
+        click.echo(group)
         count += 1
     click.secho(f"{count} group(s)", fg='yellow')
 
     try:
-        sender_connection = sender.open_sending_connection(host, port)
-        sender_channel = sender.open_sending_channel(queue, sender_connection)
+        sender.send_messages(host, port, queue, groups)
     except AMQPConnectionError as e:
         click.secho("Could not connect to queue.", err=True, fg="red")
         click.secho(f"Args: {e.args}", err=True, fg="red")
         sys.exit(1)
-
-    click.secho("Connected. Sending: ", fg='cyan')
-
-    for item in clusters:
-        sender.send_message(json.dumps(item), sender_channel, queue)
-    sender.close_connection(sender_connection)
 
     click.secho("All groups sent. Exiting...", fg='cyan')
     sys.exit(0)

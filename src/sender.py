@@ -1,52 +1,25 @@
 import pika
+import click
+import json
 
 
-def open_sending_connection(host: str, port: int) -> pika.BlockingConnection:
-    """
-    Open connection
-    :param host:    Host name
-    :param port:    Port number
-    :return:        A connection
-    """
-    return pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
-
-
-def open_sending_channel(queue: str, connection: pika.BlockingConnection) -> pika.adapters.BlockingConnection.channel:
-    """
-    Open channel
-    :param queue:       Name of the queue
-    :param connection:  connection
-    :return:        Return the channel
-    """
+def send_messages(host: str, port: int, queue: str, groups: list):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
     channel = connection.channel()
 
     channel.queue_declare(queue=queue, durable=True)
-    return channel
 
+    click.secho("Connected. Sending: ", fg='cyan')
+    for item in groups:
+        message = json.dumps(item)
+        channel.basic_publish(
+            exchange='',
+            routing_key=queue,
+            body=message,
+            properties=pika.BasicProperties(
+                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
+                content_type="application/json"
+            ))
+        print("\tSent %r" % message)
 
-def send_message(message: str, channel: pika.adapters.BlockingConnection.channel, queue: str) -> None:
-    """
-    Send message
-    :param message: the message that will be sent
-    :param channel: the channel that is used to publish
-    :param queue:   name of the queue
-    :return:        None
-    """
-    channel.basic_publish(
-        exchange='',
-        routing_key=queue,
-        body=message,
-        properties=pika.BasicProperties(
-            delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
-            content_type="application/json"
-        ))
-    print("\tSent %r" % message)
-
-
-def close_connection(connection: pika.BlockingConnection) -> None:
-    """
-    Close connection
-    :param connection:  the connection that needs to be closed
-    :return:            None
-    """
     connection.close()

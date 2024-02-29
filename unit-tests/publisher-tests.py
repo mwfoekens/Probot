@@ -18,14 +18,6 @@ class PublisherTests(unittest.TestCase):
             count += 1
         self.assertEqual(count, 7)
 
-    def test_clear_empty_lists(self):
-        """
-        From the list passed as an argument, it should only have 3 clusters left
-        :return:
-        """
-        clusters = splitter.remove_empty_groups([["test 1"], [], ['test 2'], [], [], ['test 3'], [], []])
-        self.assertEqual(len(clusters), 3)
-
     def test_greedy_sort(self):
         nums = {"A": 12, "B": 1, "C": 21, "D": 7, "E": 25, "F": 2, "G": 9, "H": 24, "I": 4, "J": 5}
         name_c = splitter.generate_groups(4)

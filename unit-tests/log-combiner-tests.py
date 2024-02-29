@@ -4,7 +4,7 @@ import src.logcombiner.log_combiner as lc
 longest_runtime_name, longest_runtime = lc.get_longest_running_cluster("unittest-log")
 
 
-class LogCombinerTestCase(unittest.TestCase):
+class LogCombinerTests(unittest.TestCase):
     def test_start_and_end_time(self):
         """
         Test if time gets subtracted properly

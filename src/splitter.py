@@ -1,7 +1,7 @@
 import robot.result
 from robot.api import TestSuite, ExecutionResult
 from robot.model.testsuite import TestSuites
-from pathlib import PurePath
+from pathlib import Path
 from random import choice
 import json
 import click
@@ -20,15 +20,18 @@ def main(dependency_file: str, output: str, time_group_size: int, random_group_s
     """
     groups: list = []
     modulo_group: list = []
-    result: ExecutionResult = retrieve_dry_run_results(suites_location)
+    result: ExecutionResult = (TestSuite.from_file_system(Path(suites_location))
+                               .run(dryrun=True, outputdir=Path("../dryrunlog")))
 
     # If there is a dependency.json, read it and generate groups for it
-    if dependency_file is not None:
+    if dependency_file:
         with open(dependency_file, "r") as json_file:
             file: dict = json.load(json_file)
         dependency_group: list = generate_groups(file["dependencies"])
         tags_group: list = generate_groups(file["tags"])
     else:
+        dependency_group: list = []
+        tags_group: list = []
         click.secho("No dependency.json passed.", fg='bright_red', bg='white')
 
     # Always append a test to the leftover group, it gets removed when it fits into a dependency group
@@ -36,39 +39,30 @@ def main(dependency_file: str, output: str, time_group_size: int, random_group_s
         for test in suite.tests:
             modulo_group.append(test.name)
 
-            if dependency_file is not None:
+            if dependency_file:
                 dependency_sort(dependency_group, file, modulo_group, tags_group, test)
 
     # Add the dependency group and tag group to all groups
-    if dependency_file is not None:
-        add_group_to_all_groups(groups, dependency_group)
-        add_group_to_all_groups(groups, tags_group)
+    if dependency_file:
+        groups.extend(dependency_group)
+        groups.extend(tags_group)
 
     # if there is an output.xml, retrieve the times and sort based on execution time.
-    if output is not None:
-        add_group_to_all_groups(groups, outputxml_sort(modulo_group, output, time_group_size))
+    if output:
+        outputxml_group = outputxml_sort(modulo_group, output, time_group_size)
+        groups.extend(outputxml_group)
     else:
         click.secho("No output.xml passed", fg='bright_red', bg='white')
 
     # If we have tests left, assign randomly, because there's no data about the tests.
     if len(modulo_group) != 0:
-        add_group_to_all_groups(groups, random_sort(modulo_group, random_group_size))
+        random_groups: list = generate_groups(random_group_size)
 
-    return remove_empty_groups(groups)
+        for test in modulo_group:
+            choice(random_groups).append(test)
+        groups.extend(random_groups)
 
-
-def random_sort(modulo_group: list, random_group_size: int) -> list:
-    """
-    Function that randomly assigns test cases that are not in dependency, and do not exist in the output.xml
-    :param modulo_group:          Group where the leftover test cases are stored
-    :param random_group_size:     Amount of groups for randomly assigned test cases.
-    :return:                        Groups
-    """
-    random_groups: list = generate_groups(random_group_size)
-
-    for test in modulo_group:
-        choice(random_groups).append(test)
-    return random_groups
+    return [group for group in groups if len(group) != 0]
 
 
 def outputxml_sort(modulo_group: list, output: str, time_group_size: int) -> list:
@@ -83,30 +77,20 @@ def outputxml_sort(modulo_group: list, output: str, time_group_size: int) -> lis
     timed_groups: list = generate_groups(time_group_size)
     time_groups_names: list = generate_groups(time_group_size)
 
-    data: ExecutionResult = extract_xml(output)
+    data: ExecutionResult = ExecutionResult(Path(output), merge=False)
 
-    gather_tests(data, execution_times, modulo_group)
-
-    greedy_sort(execution_times, time_groups_names, timed_groups)
-
-    return time_groups_names
-
-
-def gather_tests(data: ExecutionResult, execution_times: dict, modulo_group: list) -> None:
-    """
-    Gather tests and remove them from the modulo group
-    :param data:                Test suite data from output.xml
-    :param execution_times:     Dictionary where test names and their execution times are stored
-    :param modulo_group:      Group containing the tests that aren't assigned yet
-    :return:                    None
-    """
     loop_location = find_test_suites(data)
 
+    # Gather tests
     for suite in loop_location:
         for test in suite.tests:
 
             if test.name in modulo_group:
                 add_to_group_and_remove_from_modulo_group(execution_times, None, modulo_group, test)
+
+    greedy_sort(execution_times, time_groups_names, timed_groups)
+
+    return time_groups_names
 
 
 def find_test_suites(data: ExecutionResult) -> TestSuites:
@@ -149,7 +133,7 @@ def dependency_sort(dependency_group: list, file: dict, modulo_group: list, tags
     :return:                    None
     """
     found_in_dependency: bool = False
-    found_in_tags = False
+    found_in_tags: bool = False
 
     for dependency_index in range(len(file["dependencies"])):
 
@@ -181,15 +165,6 @@ def add_to_group_and_remove_from_modulo_group(group: list or dict, test_index: i
     modulo_group.remove(test.name)
 
 
-def remove_empty_groups(groups: list) -> list:
-    """
-    Removes leftover groups
-    :param groups:     group containing all groups
-    :return:            groups without empty groups
-    """
-    return [group for group in groups if len(group) != 0]
-
-
 def generate_groups(group_size: int or list) -> list:
     """
     Generate groups within a group
@@ -200,31 +175,3 @@ def generate_groups(group_size: int or list) -> list:
         return [[] for _ in range(group_size)]
     else:
         return [[] for _ in group_size]
-
-
-def add_group_to_all_groups(groups: list, group: list) -> None:
-    """
-    Add a group to the overarching group
-    :param groups:        Overarching group
-    :param group:   Group to be added to :var: groups
-    :return:                :var: groups
-    """
-    groups.extend(group)
-
-
-def retrieve_dry_run_results(suites_location: str) -> ExecutionResult:
-    """
-    Get the dry run results from Robot Test Suites
-    :param suites_location:     where the suites are stored
-    :return:                    A Robot object containing the execution results
-    """
-    return TestSuite.from_file_system(PurePath(suites_location)).run(dryrun=True, outputdir=PurePath("../dryrunlog"))
-
-
-def extract_xml(output: str) -> ExecutionResult:
-    """
-    Extract data from the output.xml
-    :param output:  name of the output_xml
-    :return:        XML result
-    """
-    return ExecutionResult(PurePath(output), merge=False)

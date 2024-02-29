@@ -1,6 +1,6 @@
 import collections
 import unittest
-from pathlib import PurePath
+from pathlib import Path
 
 from robot.api import TestSuite
 from robot.running.model import TestCase
@@ -17,7 +17,7 @@ class ConsumerTests(unittest.TestCase):
         self.assertEqual(type(suite.tests[1]), TestCase)
 
     def test_maintain_order(self):
-        data = TestSuite.from_file_system(PurePath("unittest-suites"))
+        data = TestSuite.from_file_system(Path("unittest-suites"))
         _test_case_objects = []
 
         for suite in data.suites:

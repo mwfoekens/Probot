@@ -1,7 +1,7 @@
 import sys
 
 from robot import rebot
-from pathlib import PurePath
+from pathlib import Path
 import os
 import shutil
 import time
@@ -20,11 +20,11 @@ def combine_results(xml_location: str, output_location: str, start_and_end: tupl
     :return:                    None
     """
     start, end = start_and_end
-    output_xmls = [PurePath(f"{xml_location}/{file.name}") for file in os.scandir(PurePath(xml_location)) if
+    output_xmls = [Path(f"{xml_location}/{file.name}") for file in os.scandir(Path(xml_location)) if
                    file.name.endswith(".xml")]
 
     rebot(*output_xmls,
-          outputdir=PurePath(output_location),
+          outputdir=Path(output_location),
           output=f"{TIMESTAMP}-output.xml",
           report=f"{TIMESTAMP}-report.html",
           log=f"{TIMESTAMP}-log.html",
@@ -79,7 +79,7 @@ def get_complete_path(path: str, item: str):
     :param item:    May be a file or directory.
     :return:        Complete path
     """
-    return PurePath(f"{path}/{item}")
+    return Path(f"{path}/{item}")
 
 
 def get_longest_running_cluster(xml_location: str) -> tuple:
@@ -88,7 +88,7 @@ def get_longest_running_cluster(xml_location: str) -> tuple:
     :param xml_location:    location of the output files
     :return:                Name of the longest cluster, time of the longest cluster
     """
-    time_files = [file for file in os.scandir(PurePath(xml_location)) if file.name.endswith("runtime.txt")]
+    time_files = [file for file in os.scandir(Path(xml_location)) if file.name.endswith("runtime.txt")]
     times = dict()
 
     for file in time_files:
@@ -127,7 +127,7 @@ def print_divider() -> None:
 
 if __name__ == '__main__':
 
-    if any(os.scandir(PurePath(XML_LOCATION))):
+    if any(os.scandir(Path(XML_LOCATION))):
         TIMESTAMP = str(time.strftime("%Y-%m-%d_%H.%M.%S"))
         longest_runtime_name, longest_runtime = get_longest_running_cluster(XML_LOCATION)
         print(f"Longest running executor was {longest_runtime_name} with {longest_runtime} seconds")
@@ -141,7 +141,7 @@ if __name__ == '__main__':
 
     # Only copy the browser folder/playwright log if there's actually a log file created.
     # Otherwise the log combiner pod was too fast, and needs to wait.
-    if os.path.exists(PurePath(f"{OUTPUT_LOCATION}/{TIMESTAMP}-log.html")):
+    if os.path.exists(Path(f"{OUTPUT_LOCATION}/{TIMESTAMP}-log.html")):
         copy_output_directory(XML_LOCATION, OUTPUT_LOCATION, "browser")
         copy_output_file(XML_LOCATION, OUTPUT_LOCATION, "playwright-log.txt")
         sys.exit(0)

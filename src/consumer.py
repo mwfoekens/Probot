@@ -5,16 +5,14 @@ import os
 import executor
 import uuid
 import time
-from pathlib import PurePath
+from pathlib import Path
 
 
-def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deliver,
-               properties: pika.spec.BasicProperties, body: bytes) -> None:
+def on_message(ch: pika.BlockingConnection.channel, method: pika.spec.Basic.Deliver, body: bytes) -> None:
     """
     This method is called every time a message is received. This method deals with test cases and then acknowledges
     :param ch:          channel
     :param method:      method
-    :param properties:  properties
     :param body:        message body
     :return:            None
     """
@@ -48,7 +46,7 @@ def start_consuming(channel: pika.BlockingConnection.channel, queue_name: str, t
             else:
                 wait_time += timeout
         else:
-            on_message(channel, method_frame, properties, body)
+            on_message(channel, method_frame, body)
             first_message_received = True
 
     return wait_time
@@ -102,7 +100,7 @@ def write_runtime_to_txt(output_location: str, test_suite_prefix: str, consumer_
     :param consumer_runtime:    Runtime.
     :return:                    None
     """
-    with open(PurePath(f"{output_location}/{test_suite_prefix}-runtime.txt"), "w") as f:
+    with open(Path(f"{output_location}/{test_suite_prefix}-runtime.txt"), "w") as f:
         f.write(f"{consumer_runtime}")
 
 
